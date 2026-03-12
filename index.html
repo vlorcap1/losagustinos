@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MakerSpace Los Agustinos — Diagnóstico</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: rgba(60,50,30,0.12);
+    --border-strong: rgba(60,50,30,0.22);
+    --text: #1C1A16;
+    --text-2: #5A5449;
+    --text-3: #9A9186;
+    --accent: #1D4E3F;
+    --accent-light: #E8F2EE;
+    --amber: #B87333;
+    --amber-light: #FDF3E7;
+    --red: #9B2335;
+    --red-light: #FAEAEC;
+    --blue: #1A3F6F;
+    --blue-light: #EAF0F9;
+    --purple: #4A2D7A;
+    --purple-light: #F0EBF9;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --shadow-hover: 0 2px 8px rgba(0,0,0,0.10), 0 8px 32px rgba(0,0,0,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--accent);
+    color: white;
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    right: 80px; bottom: -100px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .header-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .header-meta { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
+  .header-title { font-family: 'DM Serif Display', serif; font-size: 2.2rem; line-height: 1.15; margin-bottom: 6px; }
+  .header-title em { font-style: italic; opacity: 0.75; }
+  .header-sub { font-size: 13px; opacity: 0.65; margin-bottom: 1.5rem; }
+  .header-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* ── LAYOUT ── */
+  .main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+  /* ── SCORE STRIP ── */
+  .score-strip {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .score-main {
+    background: var(--accent);
+    color: white;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-main::after {
+    content: '61';
+    position: absolute;
+    right: -10px; bottom: -20px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 8rem;
+    opacity: 0.08;
+    line-height: 1;
+  }
+  .score-main-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.65; }
+  .score-main-num { font-family: 'DM Serif Display', serif; font-size: 3.5rem; line-height: 1; margin: 0.25rem 0; }
+  .score-main-desc { font-size: 12px; opacity: 0.7; }
+  .score-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .score-card-label { font-size: 11px; color: var(--text-3); margin-bottom: 8px; line-height: 1.4; }
+  .score-card-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--text); }
+  .score-bar { height: 3px; background: var(--surface2); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 2px; }
+
+  /* ── TABS ── */
+  .tab-nav { display: flex; gap: 4px; margin-bottom: 1.5rem; background: var(--surface); border-radius: var(--radius-sm); padding: 4px; box-shadow: var(--shadow); width: fit-content; }
+  .tab-btn { padding: 7px 18px; border-radius: 6px; border: none; background: transparent; color: var(--text-2); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { background: var(--accent); color: white; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-3); margin-bottom: 1rem; }
+
+  /* ── GRID LAYOUTS ── */
+  .g2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .g-1-1 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .g-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .mb { margin-bottom: 16px; }
+  .mb2 { margin-bottom: 24px; }
+
+  /* ── BADGE ── */
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+  .b-green { background: var(--accent-light); color: var(--accent); }
+  .b-amber { background: var(--amber-light); color: var(--amber); }
+  .b-red { background: var(--red-light); color: var(--red); }
+  .b-blue { background: var(--blue-light); color: var(--blue); }
+  .b-purple { background: var(--purple-light); color: var(--purple); }
+
+  /* ── HIGHLIGHT BOX ── */
+  .hl { border-left: 3px solid; padding: 10px 14px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 10px; }
+  .hl-green { border-color: var(--accent); background: var(--accent-light); }
+  .hl-amber { border-color: var(--amber); background: var(--amber-light); }
+  .hl-red { border-color: var(--red); background: var(--red-light); }
+  .hl-blue { border-color: var(--blue); background: var(--blue-light); }
+  .hl-purple { border-color: var(--purple); background: var(--purple-light); }
+  .hl-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+  .hl-green .hl-title { color: var(--accent); }
+  .hl-amber .hl-title { color: var(--amber); }
+  .hl-red .hl-title { color: var(--red); }
+  .hl-blue .hl-title { color: var(--blue); }
+  .hl-purple .hl-title { color: var(--purple); }
+  .hl-text { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+
+  /* ── ROW ITEM ── */
+  .row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; gap: 10px; }
+  .row:last-child { border-bottom: none; }
+  .row-lbl { color: var(--text-2); flex: 1; }
+  .row-val { font-weight: 500; color: var(--text); white-space: nowrap; }
+  .bar-wrap { flex: 1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; max-width: 80px; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+
+  /* ── FOCO CARDS ── */
+  .foco-card {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    background: var(--surface);
+    transition: box-shadow 0.18s, border-color 0.18s;
+    cursor: default;
+  }
+  .foco-card:hover { box-shadow: var(--shadow-hover); border-color: var(--border-strong); }
+  .foco-card.featured { border-color: var(--accent); }
+  .foco-title { font-size: 14px; font-weight: 600; color: var(--text); margin: 8px 0 6px; }
+  .foco-desc { font-size: 12px; color: var(--text-2); line-height: 1.6; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; }
+  .tl-item { display: flex; gap: 16px; padding-bottom: 20px; position: relative; }
+  .tl-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 15px; top: 32px; bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .tl-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  .tl-body { flex: 1; }
+  .tl-phase { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }
+  .tl-title { font-size: 15px; font-weight: 600; color: var(--text); margin: 3px 0 5px; }
+  .tl-items { font-size: 12px; color: var(--text-2); line-height: 1.7; }
+
+  /* ── SPACE COMPARE TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compare-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); border-bottom: 1px solid var(--border); }
+  .compare-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: middle; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child { color: var(--text); font-weight: 500; }
+  .compare-table .col-winner { background: rgba(29,78,63,0.04); }
+  .check { color: var(--accent); font-size: 15px; }
+  .cross { color: var(--red); font-size: 15px; }
+  .warn { color: var(--amber); font-size: 15px; }
+
+  /* ── CHART WRAPPERS ── */
+  .chart-wrap { position: relative; width: 100%; }
+  .chart-h200 { height: 200px; }
+  .chart-h260 { height: 260px; }
+  .chart-h300 { height: 300px; }
+  .chart-h380 { height: 380px; }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-2); }
+  .legend-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  /* ── FOOTER ── */
+  .footer { text-align: center; padding: 2rem; font-size: 11px; color: var(--text-3); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .score-strip { grid-template-columns: 1fr 1fr; }
+    .score-main { grid-column: 1/-1; }
+    .g2, .g3, .g-1-1, .g-2-1 { grid-template-columns: 1fr; }
+    .tab-nav { overflow-x: auto; width: 100%; }
+    .main { padding: 1rem; }
+    .header { padding: 1.5rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-meta">Diagnóstico Institucional · 11-03-2026</div>
+    <h1 class="header-title">MakerSpace <em>Los Agustinos</em></h1>
+    <p class="header-sub">Análisis de potencial y foco estratégico de implementación · Talca, Región del Maule</p>
+    <div class="header-pills">
+      <span class="pill"><span class="pill-dot" style="background:#7ECBA8"></span>Particular Subvencionado</span>
+      <span class="pill"><span class="pill-dot" style="background:#F5C46A"></span>Alta vulnerabilidad</span>
+      <span class="pill"><span class="pill-dot" style="background:#9BBFEB"></span>Básica + Media · ~40 alumnos/curso</span>
+      <span class="pill"><span class="pill-dot" style="background:#D4A3A3"></span>Sector Sur-Poniente Talca</span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- SCORE STRIP -->
+  <div class="score-strip">
+    <div class="score-main">
+      <div>
+        <div class="score-main-label">Potencial global</div>
+        <div class="score-main-num">61%</div>
+        <div class="score-main-desc">Medio-alto con brechas críticas en cultura institucional</div>
+      </div>
+      <div style="margin-top:1rem;display:flex;gap:8px;">
+        <span class="pill" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);font-size:11px;">Viable con hoja de ruta</span>
+        <span class="pill" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);font-size:11px;">Fondos SEP disponibles</span>
+      </div>
+    </div>
+    <div class="score-card">
+      <div class="score-card-label">Objetivos educativos</div>
+      <div class="score-card-num" style="color:var(--accent)">72%</div>
+      <div class="score-bar"><div class="score-bar-fill" style="width:72%;background:var(--accent)"></div></div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:6px;">Dimensión más sólida</div>
+    </div>
+    <div class="score-card">
+      <div class="score-card-label">Infraestructura</div>
+      <div class="score-card-num" style="color:var(--amber)">55%</div>
+      <div class="score-bar"><div class="score-bar-fill" style="width:55%;background:var(--amber)"></div></div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:6px;">Espacio por definir</div>
+    </div>
+    <div class="score-card">
+      <div class="score-card-label">Recursos y equipamiento</div>
+      <div class="score-card-num" style="color:var(--blue)">60%</div>
+      <div class="score-bar"><div class="score-bar-fill" style="width:60%;background:var(--blue)"></div></div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:6px;">42 equipos disponibles</div>
+    </div>
+    <div class="score-card">
+      <div class="score-card-label">Cultura institucional</div>
+      <div class="score-card-num" style="color:var(--red)">48%</div>
+      <div class="score-bar"><div class="score-bar-fill" style="width:48%;background:var(--red)"></div></div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:6px;">Mayor brecha → prioridad</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('diagnostico',this)">Diagnóstico</button>
+    <button class="tab-btn" onclick="switchTab('constructivismo',this)">Marco constructivista</button>
+    <button class="tab-btn" onclick="switchTab('digital',this)">Creación digital</button>
+    <button class="tab-btn" onclick="switchTab('focos',this)">Focos estratégicos</button>
+    <button class="tab-btn" onclick="switchTab('espacios',this)">Evaluación de espacios</button>
+    <button class="tab-btn" onclick="switchTab('ruta',this)">Ruta de implementación</button>
+  </div>
+
+  <!-- TAB: DIAGNÓSTICO -->
+  <div id="tab-diagnostico" class="tab-panel active">
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Indicadores por ítem — puntuación diagnóstica</div>
+        <div class="legend mb">
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Objetivos educativos</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Infraestructura</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1A3F6F"></span>Recursos</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#9B2335"></span>Cultura</span>
+        </div>
+        <div class="chart-wrap chart-h380">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+      <div>
+        <div class="card mb">
+          <div class="card-title">Madurez por dimensión</div>
+          <div class="chart-wrap chart-h260">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Visión de éxito declarada</div>
+          <div class="hl hl-green">
+            <div class="hl-title">En palabras del colegio</div>
+            <div class="hl-text">"Se sentirían más importantes, con mejor autoestima… les ayuda para el trabajo personal. Saliendo de lo tradicional."</div>
+          </div>
+          <div class="hl hl-blue">
+            <div class="hl-title">Lectura estratégica</div>
+            <div class="hl-text">La visión de éxito es socioemocional, no técnica. El MakerSpace debe priorizarse como herramienta de desarrollo humano, no como sala de equipos.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2 mb2">
+      <div class="card">
+        <div class="card-title">Objetivos educativos — fortalezas y brechas</div>
+        <div class="hl hl-green">
+          <div class="hl-title">Fortalezas</div>
+          <div class="hl-text">PEI activo y socializado · Evaluación auténtica múltiple · Historial de ferias de ciencias con buenos resultados · Perfil de egreso con 8 competencias siglo XXI · Metodología por proyectos en práctica real</div>
+        </div>
+        <div class="hl hl-amber">
+          <div class="hl-title">Brechas</div>
+          <div class="hl-text">STEAM solo en iniciativas individuales de docentes · Sin conexión a programas externos (CORFO, SENCE, Fundaciones) · Equidad y accesibilidad del MakerSpace no ha sido pensada</div>
+        </div>
+        <hr>
+        <div class="card-title">Competencias del perfil de egreso</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Pensamiento crítico</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Colaboración y trabajo en equipo</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Resolución de problemas complejos</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Ciudadanía y responsabilidad social</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Comunicación multimodal</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Emprendimiento</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Alfabetización digital</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="color:var(--accent)">✓</span> Creatividad e innovación</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cultura institucional — análisis de riesgo</div>
+        <div class="hl hl-red">
+          <div class="hl-title">Brechas críticas</div>
+          <div class="hl-text">Docentes con baja competencia digital y metodológica · Sin docente líder maker identificado · Planificación sigue siendo por asignatura, no interdisciplinaria · Sin plan de formación docente sistemático</div>
+        </div>
+        <div class="hl hl-green">
+          <div class="hl-title">Factores a favor</div>
+          <div class="hl-text">Apoyo explícito del equipo directivo · Comunidad escolar dispuesta al cambio · Historial de innovaciones pedagógicas con impacto medible · PEI activo como marco institucional</div>
+        </div>
+        <hr>
+        <div class="card-title">Barreras anticipadas por el colegio</div>
+        <div class="row"><span class="row-lbl">Falta de tiempo curricular disponible</span><span class="badge b-red">Alta</span></div>
+        <div class="row"><span class="row-lbl">Miedo a que estudiantes dañen equipos</span><span class="badge b-amber">Media</span></div>
+        <div class="row"><span class="row-lbl">Presupuesto insuficiente para mantención</span><span class="badge b-amber">Media</span></div>
+        <div class="row"><span class="row-lbl">Falta de capacitación docente específica</span><span class="badge b-red">Alta</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Recursos y equipamiento existentes</div>
+      <div class="g3">
+        <div>
+          <div class="row"><span class="row-lbl">Computadores All-In-One (Sala Comp.)</span><span class="row-val">20 · Operativo</span></div>
+          <div class="row"><span class="row-lbl">Notebooks HP (nuevos)</span><span class="row-val">20 · Nuevo</span></div>
+          <div class="row"><span class="row-lbl">Computadores Gear (Biblioteca)</span><span class="row-val">2 · Operativo</span></div>
+          <div class="row"><span class="row-lbl">Total equipos disponibles</span><span class="row-val" style="color:var(--accent);font-size:15px;font-weight:600">42</span></div>
+        </div>
+        <div>
+          <div class="row"><span class="row-lbl">Impresora</span><span class="row-val">1 · Operativa</span></div>
+          <div class="row"><span class="row-lbl">Audiovisual (cámaras, micrófonos)</span><span class="badge b-green">Disponible</span></div>
+          <div class="row"><span class="row-lbl">Armarios almacenamiento</span><span class="badge b-amber">3 · Requiere reparación</span></div>
+          <div class="row"><span class="row-lbl">Inventario tecnológico formal</span><span class="badge b-red">No existe</span></div>
+        </div>
+        <div>
+          <div class="row"><span class="row-lbl">LMS (Classroom / Canvas)</span><span class="badge b-green">Activo</span></div>
+          <div class="row"><span class="row-lbl">Google Workspace / Office 365</span><span class="badge b-green">Activo</span></div>
+          <div class="row"><span class="row-lbl">Fondos SEP</span><span class="badge b-green">Accesible</span></div>
+          <div class="row"><span class="row-lbl">Ancho de banda medido</span><span class="badge b-red">No medido</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CONSTRUCTIVISMO -->
+  <div id="tab-constructivismo" class="tab-panel">
+
+    <div class="hl hl-green mb2" style="border-radius:var(--radius);padding:1.25rem 1.5rem;">
+      <div class="hl-title" style="font-size:13px;">Premisa central</div>
+      <div class="hl-text" style="font-size:15px;line-height:1.65;">El MakerSpace no es una sala de equipos. Es una <strong>arquitectura pedagógica</strong> donde el conocimiento se construye haciendo, errando y compartiendo — en directa coherencia con lo que el Colegio Los Agustinos ya declara en su PEI: metodologías activo-participativas, aprendizaje significativo y evaluación auténtica.</div>
+    </div>
+
+    <div class="g3 mb2">
+      <div class="card">
+        <div class="card-title">Piaget — Aprendizaje por acción</div>
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:22px;color:var(--accent);margin-bottom:12px;">P</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">El conocimiento no se transmite: se construye activamente. El estudiante es agente, no receptor. Cada prototipo físico o digital es un esquema externalizado que el alumno puede examinar, criticar y mejorar.</div>
+        <hr>
+        <div class="card-title">Conexión con el MakerSpace</div>
+        <div class="row"><span class="row-lbl">Ciclo maker</span><span class="row-val" style="font-size:11px;">Imaginar → Crear → Mejorar → Compartir</span></div>
+        <div class="row"><span class="row-lbl">Conflicto cognitivo</span><span class="row-val" style="font-size:11px;">El prototipo que no funciona</span></div>
+        <div class="row"><span class="row-lbl">Acomodación</span><span class="row-val" style="font-size:11px;">Iterar y rediseñar</span></div>
+        <div class="hl hl-green" style="margin-top:10px;">
+          <div class="hl-title">Aplicación en Los Agustinos</div>
+          <div class="hl-text">El colegio ya usa "evaluación de proceso". El MakerSpace extiende eso naturalmente: el proceso es el prototipo evolucionando, no el test al final.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Vygotsky — Zona de Desarrollo Próximo</div>
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:22px;color:var(--blue);margin-bottom:12px;">V</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">El aprendizaje ocurre en la brecha entre lo que el estudiante puede hacer solo y lo que puede hacer con apoyo. El MakerSpace crea andamiaje entre pares y entre docente-estudiante de modo natural y visible.</div>
+        <hr>
+        <div class="card-title">Dinámicas ZDP en el espacio maker</div>
+        <div class="row"><span class="row-lbl">Pares como andamiaje</span><span class="row-val" style="font-size:11px;">Estudiante que ya sabe enseña</span></div>
+        <div class="row"><span class="row-lbl">Docente como facilitador</span><span class="row-val" style="font-size:11px;">No experto, sino guía</span></div>
+        <div class="row"><span class="row-lbl">Herramienta como extensión cognitiva</span><span class="row-val" style="font-size:11px;">El software amplía lo posible</span></div>
+        <div class="hl hl-blue" style="margin-top:10px;">
+          <div class="hl-title">Relevancia para Los Agustinos</div>
+          <div class="hl-text">Con baja competencia docente en metodologías digitales, los propios estudiantes pueden ser el andamiaje inicial. Esto no es un déficit: es una pedagogía que el MakerSpace habilita.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Papert — Construccionismo</div>
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:22px;color:var(--purple);margin-bottom:12px;">S</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">Extensión de Piaget: aprendemos mejor cuando construimos algo <em>compartible</em>. Un podcast, un video, un objeto físico, un juego — son "objetos para pensar con" que otros pueden ver, usar y criticar.</div>
+        <hr>
+        <div class="card-title">Los objetos públicos de aprendizaje</div>
+        <div class="row"><span class="row-lbl">Podcast escolar</span><span class="row-val" style="font-size:11px;">Conocimiento audible</span></div>
+        <div class="row"><span class="row-lbl">Video documental</span><span class="row-val" style="font-size:11px;">Historia que se cuenta</span></div>
+        <div class="row"><span class="row-lbl">Maqueta interactiva</span><span class="row-val" style="font-size:11px;">Ciencia que se toca</span></div>
+        <div class="row"><span class="row-lbl">Prototipo de emprendimiento</span><span class="row-val" style="font-size:11px;">Idea que se defiende</span></div>
+        <div class="hl hl-purple" style="margin-top:10px;">
+          <div class="hl-title">Conexión con la visión del colegio</div>
+          <div class="hl-text">"Saliendo de lo tradicional" — lo que el colegio declaró como visión de éxito es exactamente la promesa del construccionismo: hacer visible el aprendizaje.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Alineación entre pedagogías maker y el PEI del colegio</div>
+        <div style="position:relative;width:100%;height:280px;">
+          <canvas id="peiAlignChart"></canvas>
+        </div>
+        <div class="legend" style="margin-top:10px;">
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Presencia actual en PEI</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#4A2D7A"></span>Potencial con MakerSpace</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Modelo pedagógico recomendado</div>
+        <div class="hl hl-purple" style="margin-bottom:10px;">
+          <div class="hl-title">ABP + Construccionismo digital</div>
+          <div class="hl-text">Aprendizaje Basado en Proyectos con productos digitales o físicos compartibles como evidencia central de aprendizaje. Reemplaza la evaluación de contenidos por la evaluación de competencias en acción.</div>
+        </div>
+        <div class="card-title" style="margin-top:12px;">Ciclo pedagógico maker</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">1</div>
+            <div><span style="font-weight:500;font-size:13px;">Desafío real</span><span style="color:var(--text-3);font-size:12px;"> — problema del contexto local o del colegio</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue-light);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">2</div>
+            <div><span style="font-weight:500;font-size:13px;">Investigar y definir</span><span style="color:var(--text-3);font-size:12px;"> — quién sufre el problema y por qué</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-light);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">3</div>
+            <div><span style="font-weight:500;font-size:13px;">Crear y prototipar</span><span style="color:var(--text-3);font-size:12px;"> — con herramientas digitales y materiales</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--purple-light);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">4</div>
+            <div><span style="font-weight:500;font-size:13px;">Compartir y recibir feedback</span><span style="color:var(--text-3);font-size:12px;"> — audiencia real, no solo el docente</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">5</div>
+            <div><span style="font-weight:500;font-size:13px;">Iterar</span><span style="color:var(--text-3);font-size:12px;"> — mejorar a partir de evidencia real</span></div>
+          </div>
+        </div>
+        <div class="hl hl-amber" style="margin-top:14px;">
+          <div class="hl-title">Conexión con objetivo estratégico PEI</div>
+          <div class="hl-text">El OE2 del PEI dice literalmente "metodologías activo-participativas que permitan aprendizaje más significativo". El ciclo maker es la implementación concreta de ese objetivo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb2">
+      <div class="card-title">Teorías de aprendizaje — comparativa con práctica tradicional vs maker</div>
+      <div style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Dimensión</th>
+              <th>Práctica tradicional actual</th>
+              <th class="col-winner">Con MakerSpace construccionista</th>
+              <th>Marco teórico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Rol del estudiante</td><td>Receptor de contenidos</td><td class="col-winner">Constructor de artefactos y significados</td><td>Papert, Piaget</td></tr>
+            <tr><td>Rol del docente</td><td>Transmisor de información</td><td class="col-winner">Facilitador, diseñador de experiencias</td><td>Vygotsky</td></tr>
+            <tr><td>Evidencia de aprendizaje</td><td>Prueba escrita, nota</td><td class="col-winner">Producto público: video, podcast, prototipo</td><td>Construccionismo</td></tr>
+            <tr><td>Error</td><td>Penalizado (baja la nota)</td><td class="col-winner">Fuente de datos para iterar</td><td>Design Thinking, ABP</td></tr>
+            <tr><td>Colaboración</td><td>Accesoria ("trabajo grupal")</td><td class="col-winner">Central: el producto requiere múltiples habilidades</td><td>Vygotsky ZDP</td></tr>
+            <tr><td>Conexión con el mundo real</td><td>Baja (ejercicios abstractos)</td><td class="col-winner">Alta: problemas del barrio, del colegio, del Maule</td><td>Ausubel — aprendizaje significativo</td></tr>
+            <tr><td>Motivación</td><td>Extrínseca (nota, no reprobar)</td><td class="col-winner">Intrínseca (el objeto existe, es real, me representa)</td><td>Deci & Ryan — autodeterminación</td></tr>
+            <tr><td>Interdisciplina</td><td>Por asignatura, desconectada</td><td class="col-winner">Natural: un podcast requiere Lengua + Ciencias + Arte</td><td>Currículum integrado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Aprendizaje Socioemocional (SEL) desde el MakerSpace</div>
+        <div style="font-size:13px;color:var(--text-2);margin-bottom:12px;line-height:1.65;">El colegio declaró que el éxito del MakerSpace se mediría en autoestima y sentido de importancia personal — no en indicadores técnicos. Esto tiene respaldo teórico sólido en la literatura SEL.</div>
+        <div class="row"><span class="row-lbl">Competencia personal</span><span class="row-val" style="font-size:11px;">"Yo puedo hacer cosas reales"</span></div>
+        <div class="row"><span class="row-lbl">Autoeficacia (Bandura)</span><span class="row-val" style="font-size:11px;">Creer que soy capaz de completar tareas</span></div>
+        <div class="row"><span class="row-lbl">Agencia</span><span class="row-val" style="font-size:11px;">Tener control sobre mi proceso de aprendizaje</span></div>
+        <div class="row"><span class="row-lbl">Identidad creativa</span><span class="row-val" style="font-size:11px;">"Soy alguien que crea, no solo recibe"</span></div>
+        <div class="hl hl-green" style="margin-top:12px;">
+          <div class="hl-title">Relevancia crítica en contexto de alta vulnerabilidad</div>
+          <div class="hl-text">Investigaciones de Margolis & McCabe (2006) y la literatura sobre growth mindset de Dweck muestran que estudiantes en contextos de alta vulnerabilidad se benefician desproporcionadamente de espacios donde pueden producir algo valioso y compartirlo. El producto físico o digital es evidencia tangible de capacidad — algo que ninguna nota puede reemplazar.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Modelo de evaluación auténtica recomendado</div>
+        <div style="font-size:13px;color:var(--text-2);margin-bottom:12px;line-height:1.65;">Alineado con el OE3 del PEI: "incorporar evaluación formativa y de proceso". El MakerSpace permite una evaluación que el sistema tradicional no puede hacer.</div>
+        <div class="hl hl-blue" style="margin-bottom:8px;">
+          <div class="hl-title">Rúbrica maker (en lugar de nota)</div>
+          <div class="hl-text">¿El producto responde al problema definido? ¿Se iteró al menos 2 veces? ¿Puede explicarlo a alguien que no participó? ¿Qué aprendió el equipo sobre el proceso?</div>
+        </div>
+        <div class="hl hl-purple" style="margin-bottom:8px;">
+          <div class="hl-title">Portfolio de proceso</div>
+          <div class="hl-text">Registro de versiones del prototipo, diario de reflexión, capturas de pantalla del proceso creativo. Reemplaza la prueba por evidencia longitudinal.</div>
+        </div>
+        <div class="hl hl-amber">
+          <div class="hl-title">Presentación a audiencia real</div>
+          <div class="hl-text">Feria interna, video publicado, podcast emitido en la radio del colegio. La audiencia real es el evaluador más poderoso que existe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CREACIÓN DIGITAL -->
+  <div id="tab-digital" class="tab-panel">
+
+    <div class="hl hl-blue mb2" style="border-radius:var(--radius);padding:1.25rem 1.5rem;">
+      <div class="hl-title" style="font-size:13px;">Marco de referencia</div>
+      <div class="hl-text" style="font-size:15px;line-height:1.65;">La creación digital es la expresión contemporánea del construccionismo. En Los Agustinos existe la infraestructura base (42 equipos, audiovisual, LMS activo). La pregunta no es <em>si se puede</em> — es <em>qué producir primero</em> para instalar la cultura maker con los recursos existentes.</div>
+    </div>
+
+    <div class="g3 mb2">
+      <div class="card">
+        <div style="font-size:24px;margin-bottom:8px;">🎙</div>
+        <div class="card-title">Producción de audio y podcast</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">El podcast escolar es la línea de entrada más accesible: requiere solo un micrófono (ya disponible), cualquier computador, y Audacity (gratuito). Activa Lengua, Historia, Ciencias e incluso Inglés de forma natural.</div>
+        <div class="row"><span class="row-lbl">Herramienta principal</span><span class="row-val" style="font-size:11px;">Audacity (libre)</span></div>
+        <div class="row"><span class="row-lbl">Plataforma distribución</span><span class="row-val" style="font-size:11px;">Spotify for Podcasters</span></div>
+        <div class="row"><span class="row-lbl">Equipos requeridos</span><span class="row-val" style="font-size:11px;">1 computador + 1 micrófono</span></div>
+        <div class="row"><span class="row-lbl">Curva de aprendizaje</span><span class="badge b-green">Baja</span></div>
+        <div class="row"><span class="row-lbl">Producto compartible</span><span class="badge b-green">Episodio público</span></div>
+        <div class="hl hl-green" style="margin-top:10px;">
+          <div class="hl-title">Proyecto piloto sugerido</div>
+          <div class="hl-text">Radio Agustinos: historias del barrio sur-poniente de Talca. Conexión directa con la misión de "formación ciudadana y responsabilidad social".</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:24px;margin-bottom:8px;">🎬</div>
+        <div class="card-title">Producción audiovisual y video</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">Con las cámaras disponibles y DaVinci Resolve (gratuito) o CapCut, los estudiantes pueden producir mini-documentales, explainers curriculares, entrevistas a la comunidad. Activa comunicación multimodal y pensamiento narrativo.</div>
+        <div class="row"><span class="row-lbl">Herramienta edición</span><span class="row-val" style="font-size:11px;">DaVinci Resolve / CapCut</span></div>
+        <div class="row"><span class="row-lbl">Equipos requeridos</span><span class="row-val" style="font-size:11px;">Cámara disponible + laptop</span></div>
+        <div class="row"><span class="row-lbl">Plataforma distribución</span><span class="row-val" style="font-size:11px;">YouTube (canal colegio)</span></div>
+        <div class="row"><span class="row-lbl">Curva de aprendizaje</span><span class="badge b-amber">Media</span></div>
+        <div class="row"><span class="row-lbl">Producto compartible</span><span class="badge b-green">Video publicado</span></div>
+        <div class="hl hl-blue" style="margin-top:10px;">
+          <div class="hl-title">Proyecto piloto sugerido</div>
+          <div class="hl-text">Documental "Maule que construye": historia de Colín y sectores aledaños contada por los propios estudiantes. Conexión con identidad territorial.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:24px;margin-bottom:8px;">🎨</div>
+        <div class="card-title">Diseño gráfico y comunicación visual</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">Canva (educativo gratuito) y Figma (gratuito para educación) permiten diseñar campañas, infografías, identidades de marca para proyectos. Conecta directamente con el perfil de egreso en alfabetización digital y creatividad.</div>
+        <div class="row"><span class="row-lbl">Herramienta principal</span><span class="row-val" style="font-size:11px;">Canva for Education</span></div>
+        <div class="row"><span class="row-lbl">Avance</span><span class="row-val" style="font-size:11px;">Figma (UI/UX básico)</span></div>
+        <div class="row"><span class="row-lbl">Equipos requeridos</span><span class="row-val" style="font-size:11px;">Cualquier computador con web</span></div>
+        <div class="row"><span class="row-lbl">Curva de aprendizaje</span><span class="badge b-green">Baja</span></div>
+        <div class="row"><span class="row-lbl">Producto compartible</span><span class="badge b-green">Afiche, campaña, marca</span></div>
+        <div class="hl hl-purple" style="margin-top:10px;">
+          <div class="hl-title">Proyecto piloto sugerido</div>
+          <div class="hl-text">Campaña de comunicación escolar: los estudiantes diseñan la identidad visual de la primera Feria MakerSpace del colegio.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Stack de herramientas digitales gratuitas — disponibles hoy</div>
+        <div style="position:relative;width:100%;height:300px;">
+          <canvas id="toolsChart"></canvas>
+        </div>
+        <div class="legend" style="margin-top:10px;">
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Complejidad técnica</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1A3F6F"></span>Impacto pedagógico</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Acceso con equipo disponible</span>
+        </div>
+      </div>
+      <div>
+        <div class="card mb">
+          <div class="card-title">Niveles de creación digital</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="padding:10px 12px;background:var(--accent-light);border-radius:var(--radius-sm);">
+              <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:3px;">NIVEL 1 · Consumo consciente</div>
+              <div style="font-size:12px;color:var(--text-2);">Analizar, criticar y comentar medios digitales existentes. Identificar bias en noticias, fuentes, algoritmos.</div>
+            </div>
+            <div style="padding:10px 12px;background:var(--blue-light);border-radius:var(--radius-sm);">
+              <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:3px;">NIVEL 2 · Creación con herramientas</div>
+              <div style="font-size:12px;color:var(--text-2);">Canva, Podcast, Video, Infografías. El estudiante produce contenido con herramientas ya diseñadas. <strong>Punto de entrada recomendado.</strong></div>
+            </div>
+            <div style="padding:10px 12px;background:var(--amber-light);border-radius:var(--radius-sm);">
+              <div style="font-size:11px;font-weight:600;color:var(--amber);margin-bottom:3px;">NIVEL 3 · Diseño de experiencias</div>
+              <div style="font-size:12px;color:var(--text-2);">Figma, presentaciones interactivas, juegos educativos en Scratch. El estudiante diseña para otros.</div>
+            </div>
+            <div style="padding:10px 12px;background:var(--purple-light);border-radius:var(--radius-sm);">
+              <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:3px;">NIVEL 4 · Programación y automatización</div>
+              <div style="font-size:12px;color:var(--text-2);">Python básico, Arduino, Tinkercad. El estudiante hace que las cosas pasen solas. Fase 3 en adelante.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Inteligencia Artificial como herramienta maker</div>
+          <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.65;">La IA no reemplaza la creación — la amplifica. Con los 42 equipos disponibles y conexión a internet, los estudiantes pueden usar IA como co-creadora desde el primer día.</div>
+          <div class="row"><span class="row-lbl">Texto e ideas</span><span class="row-val" style="font-size:11px;">ChatGPT, Claude como copiloto</span></div>
+          <div class="row"><span class="row-lbl">Imágenes para proyectos</span><span class="row-val" style="font-size:11px;">Canva AI, Adobe Express</span></div>
+          <div class="row"><span class="row-lbl">Música para podcasts/video</span><span class="row-val" style="font-size:11px;">Suno, ElevenLabs</span></div>
+          <div class="row"><span class="row-lbl">Presentaciones automáticas</span><span class="row-val" style="font-size:11px;">Gamma, Beautiful.ai</span></div>
+          <div class="hl hl-amber" style="margin-top:10px;">
+            <div class="hl-title">Enfoque pedagógico clave</div>
+            <div class="hl-text">La IA se usa como herramienta de prototipado rápido, no para reemplazar el proceso. El estudiante define el problema, evalúa el output de la IA y decide si sirve. Eso es pensamiento crítico en acción.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb2">
+      <div class="card-title">Movimiento Maker — principios y cultura</div>
+      <div style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;">El movimiento maker no es una metodología pedagógica: es una <strong>cultura de creación, comunidad y apertura</strong> que nació en los FabLabs del MIT (Neil Gershenfeld, 2005) y se extendió globalmente a través de Make: Magazine, Maker Faires y el movimiento DIY/DIWO (Do It With Others). Su premisa: cualquier persona puede aprender a hacer cualquier cosa con las herramientas correctas y una comunidad que comparte conocimiento.</div>
+      <div class="g3">
+        <div class="hl hl-green" style="margin:0;border-radius:var(--radius-sm);">
+          <div class="hl-title">Make · Hacer</div>
+          <div class="hl-text">El aprendizaje ocurre en el acto de construir. No importa si es con madera, código, tela o electrónica — lo que importa es que el objeto exista y funcione. "Making is connecting" (David Gauntlett).</div>
+        </div>
+        <div class="hl hl-blue" style="margin:0;border-radius:var(--radius-sm);">
+          <div class="hl-title">Share · Compartir</div>
+          <div class="hl-text">El maker comparte lo que aprende y lo que crea. Código abierto, instrucciones publicadas, demos públicas. La comunidad es el amplificador del aprendizaje individual.</div>
+        </div>
+        <div class="hl hl-purple" style="margin:0;border-radius:var(--radius-sm);">
+          <div class="hl-title">Hack · Modificar</div>
+          <div class="hl-text">Tomar algo existente y cambiarlo, mejorarlo, reutilizarlo para otro propósito. El "hackeo" es una forma legítima de aprender: entender algo desmontándolo y reconstruyéndolo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb2">
+      <div class="card-title">Tipos de creación en el espacio maker digital</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Fabricación digital asistida por computador</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">Diseño en software → producción física. El circuito digital y el objeto físico son el mismo proceso.</div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Modelado 3D</span><span style="font-size:11px;color:var(--text-3);">Tinkercad, FreeCAD, Blender</span></div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Corte vectorial</span><span style="font-size:11px;color:var(--text-3);">Inkscape + cortadora láser</span></div>
+          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Impresión 3D</span><span style="font-size:11px;color:var(--text-3);">Slicer + FDM básico</span></div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Electrónica y física interactiva</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">Hacer que los objetos reaccionen al mundo real. La electrónica deja de ser abstracta cuando prende un LED o mide temperatura.</div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Microcontroladores</span><span style="font-size:11px;color:var(--text-3);">Arduino, ESP32, micro:bit</span></div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Sensores básicos</span><span style="font-size:11px;color:var(--text-3);">Temperatura, luz, distancia</span></div>
+          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Simulación</span><span style="font-size:11px;color:var(--text-3);">Tinkercad Circuits (online)</span></div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Programación creativa y código</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">El código como material. No programar para resolver ejercicios — programar para que algo hermoso o útil exista en el mundo.</div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Bloques visuales</span><span style="font-size:11px;color:var(--text-3);">Scratch, MakeCode</span></div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Web básica</span><span style="font-size:11px;color:var(--text-3);">HTML/CSS, p5.js</span></div>
+          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Arte generativo</span><span style="font-size:11px;color:var(--text-3);">Processing, openFrameworks</span></div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Biohacking y maker de bajo costo</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">La tradición DIY aplicada a ciencia accesible. Microscopios de cartón, tintes naturales, experimentos que cuestan menos de $5.000.</div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">OpenScienceHW</span><span style="font-size:11px;color:var(--text-3);">Equipos abiertos replicables</span></div>
+          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Foldscope</span><span style="font-size:11px;color:var(--text-3);">Microscopio de papel</span></div>
+          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Materiales reciclados</span><span style="font-size:11px;color:var(--text-3);">Cajas, cartón, botellas</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Ecosistema maker global — referencias clave</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--accent);flex-shrink:0;">F</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);">FabLab Network (MIT)</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Red global de laboratorios de fabricación digital. Protocolo estándar: láser, impresión 3D, fresadora, vinilo, electrónica. Chile tiene FabLabs en Santiago, Valparaíso y otras ciudades.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--blue);flex-shrink:0;">M</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Make: Magazine y Maker Faire</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">La biblia del movimiento maker desde 2005. Maker Faire son ferias donde makers de todas las edades muestran sus proyectos. Modelo directo para la Feria MakerSpace Los Agustinos.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--amber-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--amber);flex-shrink:0;">I</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Instructables / Hackster.io</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Repositorios abiertos con miles de proyectos maker documentados paso a paso. Los estudiantes pueden publicar sus propios proyectos y recibir feedback de la comunidad global.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--purple);flex-shrink:0;">A</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Arduino Education / micro:bit</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Plataformas diseñadas para educación con recursos curriculares abiertos. Arduino Education tiene programas específicos para escuelas con contexto de recursos limitados.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--red-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--red);flex-shrink:0;">C</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Colabi / Exploradores del Futuro Maule</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Referentes locales del ecosistema maker en la Región del Maule. Articular con estas iniciativas permite acceso a red de mentores, materiales compartidos y ferias regionales.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Dimensiones del perfil maker estudiantil</div>
+        <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;line-height:1.6;">Lo que se busca desarrollar en el estudiante — no competencias técnicas aisladas, sino una <em>identidad</em> como creador.</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div>
+            <div><span style="font-size:13px;font-weight:500;">Curiosidad activa</span> <span style="font-size:12px;color:var(--text-3);">— se pregunta "¿cómo funciona esto?"</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;"></div>
+            <div><span style="font-size:13px;font-weight:500;">Tolerancia al error</span> <span style="font-size:12px;color:var(--text-3);">— el fallo es información, no fracaso</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--amber);flex-shrink:0;"></div>
+            <div><span style="font-size:13px;font-weight:500;">Pensamiento en sistemas</span> <span style="font-size:12px;color:var(--text-3);">— ve relaciones, no partes aisladas</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--purple);flex-shrink:0;"></div>
+            <div><span style="font-size:13px;font-weight:500;">Generosidad del conocimiento</span> <span style="font-size:12px;color:var(--text-3);">— comparte lo que aprende</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0;"></div>
+            <div><span style="font-size:13px;font-weight:500;">Identidad creadora</span> <span style="font-size:12px;color:var(--text-3);">— "soy alguien que hace cosas"</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--text-3);flex-shrink:0;"></div>
+            <div><span style="font-size:13px;font-weight:500;">Agencia sobre el entorno</span> <span style="font-size:12px;color:var(--text-3);">— puedo cambiar cosas a mi alrededor</span></div>
+          </div>
+        </div>
+        <div class="hl hl-amber" style="margin-top:14px;">
+          <div class="hl-title">Por qué importa en Los Agustinos</div>
+          <div class="hl-text">En un contexto de alta vulnerabilidad, la identidad creadora es un factor protector documentado. El estudiante que produce algo real tiene evidencia concreta de su capacidad — independiente de su nota o su situación familiar.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Marco de competencias digitales — MINEDUC + DigComp</div>
+      <div style="position:relative;width:100%;height:260px;">
+        <canvas id="digcompChart"></canvas>
+      </div>
+      <div class="legend" style="margin-top:10px;">
+        <span class="legend-item"><span class="legend-sq" style="background:#9B2335"></span>Nivel actual estimado en el colegio</span>
+        <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Meta con MakerSpace activo (2 años)</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: FOCOS -->
+  <div id="tab-focos" class="tab-panel">
+    <div class="g2 mb2">
+      <div class="foco-card featured">
+        <span class="badge b-green">Foco recomendado · Prioridad 1</span>
+        <div class="foco-title">MakerSpace de Expresión Digital y Prototipado Liviano</div>
+        <div class="foco-desc">Capitaliza los 42 equipos existentes y el equipamiento audiovisual disponible. Líneas de trabajo: podcasting y radio escolar, producción audiovisual y video, diseño digital (Canva, Figma), prototipado con materiales físicos básicos. Compatible con el 100% del perfil de egreso declarado.</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge b-green">Sin compra mayor inicial</span>
+          <span class="badge b-green">Alta alineación PEI</span>
+          <span class="badge b-green">Apropiado para contexto SEP</span>
+        </div>
+      </div>
+      <div class="foco-card" style="border-color:var(--purple)">
+        <span class="badge b-purple">Foco diferenciador · Prioridad 2</span>
+        <div class="foco-title">Hub de Emprendimiento Social Territorial</div>
+        <div class="foco-desc">Conecta directamente con la visión de éxito declarada: autoestima, desarrollo personal, ciudadanía activa. Proyectos con impacto en la comunidad del sector sur-poniente de Talca. Pensamiento de diseño aplicado a problemas locales reales. Muy alineado con el sello institucional de "igualdad de oportunidades".</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge b-purple">Identidad institucional</span>
+          <span class="badge b-purple">Alta vulnerabilidad → alto impacto</span>
+        </div>
+      </div>
+      <div class="foco-card" style="border-color:var(--amber)">
+        <span class="badge b-amber">Foco secundario · Fase 2</span>
+        <div class="foco-title">Laboratorio de Ciencias Aplicadas y STEAM</div>
+        <div class="foco-desc">Aprovecha el historial en ferias de ciencias con buenos resultados. Experimentos, maquetas, introducción a Arduino básico. Requiere más inversión y formación docente específica. Escalar después de instalar la cultura maker con las otras líneas.</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge b-amber">Fase 2 recomendado</span>
+          <span class="badge b-amber">Requiere docente STEM</span>
+        </div>
+      </div>
+      <div class="foco-card" style="opacity:0.7">
+        <span class="badge b-red">No recomendado ahora</span>
+        <div class="foco-title">MakerSpace de Robótica y Electrónica Avanzada</div>
+        <div class="foco-desc">Alto costo de implementación, requiere expertise docente específico ausente en el colegio. Espacio fijo no expandible. Considerar solo en Fase 3 si la cultura maker ya está consolidada y existe un referente técnico interno formado.</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge b-red">Sin base docente</span>
+          <span class="badge b-red">Costo alto</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Alineación de focos con perfil de egreso</div>
+        <div class="legend mb">
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Expresión Digital</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#4A2D7A"></span>Hub Emprendimiento Social</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>STEAM / Ciencias</span>
+        </div>
+        <div class="chart-wrap chart-h260">
+          <canvas id="alignChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Propuesta de nombre y posicionamiento</div>
+        <div class="hl hl-blue" style="margin-bottom:14px;">
+          <div class="hl-title">Nombre sugerido</div>
+          <div class="hl-text" style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--blue);margin:6px 0 4px;">"Laboratorio de Ideas Los Agustinos"</div>
+          <div class="hl-text">Evita el tecnicismo de "MakerSpace", conecta con la identidad institucional y comunica apertura creativa para toda la comunidad.</div>
+        </div>
+        <div class="hl hl-green">
+          <div class="hl-title">Mensaje para apoderados</div>
+          <div class="hl-text">Desarrollo de habilidades para la vida, no solo notas. Autoestima, creatividad, trabajo en equipo real.</div>
+        </div>
+        <div class="hl hl-blue">
+          <div class="hl-title">Mensaje para fondos SEP/CORFO</div>
+          <div class="hl-text">Reducción de brechas digitales en contexto de alta vulnerabilidad. Modelo replicable para la Región del Maule.</div>
+        </div>
+        <div class="hl hl-purple">
+          <div class="hl-title">Mensaje institucional narrativo</div>
+          <div class="hl-text">"Un espacio donde los estudiantes construyen lo que piensan."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ESPACIOS -->
+  <div id="tab-espacios" class="tab-panel">
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Comparación de espacios candidatos — radar de condiciones</div>
+        <div class="legend mb">
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Sala de Computación <span class="badge b-green" style="margin-left:4px;">Recomendado</span></span>
+          <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Biblioteca</span>
+        </div>
+        <div class="chart-wrap chart-h300">
+          <canvas id="espaciosChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Veredicto de espacios</div>
+        <div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px;">SALA DE COMPUTACIÓN <span class="badge b-green" style="margin-left:4px;">✓ Recomendada</span></div>
+          <div style="font-size:12px;color:var(--text-2);">19 enchufes triples · WiFi · Aire acondicionado + luz natural · 40 equipos base · Piso vinílico resistente · Mesas redistribuibles</div>
+        </div>
+        <div style="background:var(--amber-light);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:4px;">BIBLIOTECA <span class="badge b-amber" style="margin-left:4px;">Opción B</span></div>
+          <div style="font-size:12px;color:var(--text-2);">Solo 3 enchufes · Piso parquet frágil · Solo 2 equipos base · Reubicación de acervo necesaria · Iluminación limitada (1 ventana)</div>
+        </div>
+        <hr>
+        <div class="card-title">Pendientes en sala computación</div>
+        <div class="row"><span class="row-lbl">Reparar/asegurar 3 armarios</span><span class="badge b-red">Urgente</span></div>
+        <div class="row"><span class="row-lbl">Medir ancho de banda real</span><span class="badge b-amber">Necesario</span></div>
+        <div class="row"><span class="row-lbl">Rediseñar layout por zonas</span><span class="badge b-amber">Planificar</span></div>
+        <div class="row"><span class="row-lbl">Revisar accesibilidad Ley 20.422</span><span class="badge b-amber">Planificar</span></div>
+        <div class="row"><span class="row-lbl">Definir punto de agua cercano</span><span class="badge b-blue">Si hay prototipado físico</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tabla comparativa detallada</div>
+      <div style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Condición</th>
+              <th class="col-winner">Sala de Computación</th>
+              <th>Biblioteca</th>
+              <th>Observación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Enchufes disponibles</td><td class="col-winner"><strong>19 (triple)</strong> <span class="check">✓</span></td><td>3 <span class="cross">✗</span></td><td>Biblioteca requeriría instalación eléctrica mayor</td></tr>
+            <tr><td>WiFi estable</td><td class="col-winner"><span class="check">✓ Sí</span></td><td><span class="check">✓ Sí</span></td><td>Ambos espacios cubiertos</td></tr>
+            <tr><td>Ventilación</td><td class="col-winner"><span class="check">✓</span> Aire acond. + natural</td><td><span class="check">✓</span> Aire acondicionado</td><td>Ambos aceptables</td></tr>
+            <tr><td>Iluminación natural</td><td class="col-winner"><span class="check">✓</span> Buena + ampolletas</td><td><span class="warn">⚠</span> 1 ventana limitada</td><td>Sala Comp. claramente superior</td></tr>
+            <tr><td>Mesas redistribuibles</td><td class="col-winner"><span class="check">✓</span> Sí (no fijas)</td><td><span class="check">✓</span> Sí (no fijas)</td><td>Ambos permiten layout flexible</td></tr>
+            <tr><td>Almacenamiento</td><td class="col-winner"><span class="warn">⚠</span> 3 armarios (reparar)</td><td><span class="check">✓</span> Sí, disponible</td><td>Biblioteca mejor en este ítem</td></tr>
+            <tr><td>Equipos base existentes</td><td class="col-winner"><strong>40 equipos</strong> <span class="check">✓</span></td><td>2 equipos <span class="cross">✗</span></td><td>Diferencia decisiva para MakerSpace digital</td></tr>
+            <tr><td>Tipo de piso</td><td class="col-winner"><span class="check">✓</span> Vinílico (resistente)</td><td><span class="warn">⚠</span> Parquet (frágil)</td><td>Parquet no recomendado para actividades maker</td></tr>
+            <tr><td>Accesibilidad Ley 20.422</td><td class="col-winner"><span class="warn">⚠</span> Cumple parcialmente</td><td><span class="warn">⚠</span> Cumple parcialmente</td><td>Ambos requieren mejoras en accesibilidad</td></tr>
+            <tr><td>Impacto en funciones actuales</td><td class="col-winner"><span class="warn">⚠</span> Requiere reubicar</td><td><span class="cross">✗</span> Requiere reubicar acervo</td><td>Sala Comp. más manejable</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: RUTA -->
+  <div id="tab-ruta" class="tab-panel">
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Gantt de implementación — 8 semanas (2 meses)</div>
+        <div class="chart-wrap chart-h380">
+          <canvas id="roadmapChart"></canvas>
+        </div>
+        <div class="legend" style="margin-top:12px;">
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Fase 1 · S1–2 · Fundación</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1A3F6F"></span>Fase 2 · S3–4 · Instalación</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Fase 3 · S5–6 · Escalamiento</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#4A2D7A"></span>Fase 4 · S7–8 · Consolidación</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Acción más urgente</div>
+        <div class="hl hl-red" style="margin-bottom:14px;">
+          <div class="hl-title">Riesgo #1 — Sin docente líder</div>
+          <div class="hl-text">Sin una persona interna con interés genuino en liderar el MakerSpace, la hoja de ruta completa pierde tracción. Esta es la única acción que no se puede delegar a la siguiente fase.</div>
+        </div>
+        <div class="hl hl-amber">
+          <div class="hl-title">Riesgo #2 — Sin inventario tecnológico</div>
+          <div class="hl-text">No existe un inventario actualizado. No se puede planificar el MakerSpace ni postular a fondos sin saber exactamente con qué se cuenta.</div>
+        </div>
+        <div class="hl hl-blue">
+          <div class="hl-title">Oportunidad — Fondos SEP ciclo 2026</div>
+          <div class="hl-text">El colegio tiene acceso a SEP. El siguiente ciclo de solicitud es la ventana para financiar el mobiliario y la intervención del espacio sin depender del presupuesto regular.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Hitos detallados por fase</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--accent-light);color:var(--accent);">1</div>
+          <div class="tl-body">
+            <div class="tl-phase">Fase 1 · Semanas 1–2 · Fundación</div>
+            <div class="tl-title">Preparación institucional y decisiones base</div>
+            <div class="tl-items">Definir espacio físico (recomendado: Sala Computación) · Levantar inventario tecnológico completo · Identificar o designar docente líder interno · Medir ancho de banda real del espacio · Reparar y asegurar armarios · Definir modelo de gestión diaria (paradocente responsable) · Postular a fondos SEP para el ciclo siguiente</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--blue-light);color:var(--blue);">2</div>
+          <div class="tl-body">
+            <div class="tl-phase">Fase 2 · Semanas 3–4 · Instalación y piloto</div>
+            <div class="tl-title">MVP del espacio + activación pedagógica</div>
+            <div class="tl-items">Intervención de mobiliario por zonas de trabajo · Taller de capacitación docente en metodología maker y ABP · Activar con 2–3 cursos piloto · Incorporar herramientas: grabación podcast, diseño Canva/Figma, prototipado básico con materiales · Primera feria interna de proyectos maker</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--amber-light);color:var(--amber);">3</div>
+          <div class="tl-body">
+            <div class="tl-phase">Fase 3 · Semanas 5–6 · Escalamiento</div>
+            <div class="tl-title">Currículo transversal + nuevas herramientas</div>
+            <div class="tl-items">Integrar MakerSpace a planificación de 6+ asignaturas · Postular a programas externos (UDD Maule, CORFO, JUNAEB, Ministerio) · Incorporar impresora 3D o cortadora láser básica · Crear comunidad maker interna con estudiantes referentes · Articular con ferias regionales de ciencias e innovación</div>
+          </div>
+        </div>
+        <div class="tl-item" style="padding-bottom:0;">
+          <div class="tl-dot" style="background:var(--purple-light);color:var(--purple);">4</div>
+          <div class="tl-body">
+            <div class="tl-phase">Fase 4 · Semanas 7–8 · Consolidación y evaluación</div>
+            <div class="tl-title">Medición de impacto y proyección estratégica</div>
+            <div class="tl-items">Medición de indicadores socioemocionales (autoestima, colaboración, agencia) · Informe de impacto para directivos, sostenedor y comunidad · Decisión sobre expansión o segundo espacio · Postular a certificación MakerSpace (FabLearn, alianzas con INACAP, UDD, CORFO) · Publicar modelo como caso Maule para replicación</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  Diagnóstico elaborado por <strong>Colabi SpA</strong> · Talca, Región del Maule · Marzo 2026
+</footer>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(() => initChart(id), 80);
+}
+
+const rendered = {};
+const TC = '#5A5449';
+const GC = 'rgba(90,84,73,0.12)';
+
+function initChart(id) {
+  if (rendered[id]) return;
+  rendered[id] = true;
+
+  if (id === 'diagnostico') {
+    // BAR CHART horizontal
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: [
+          'PEI activo','Eval. auténtica','Ferias/proyectos','Perfil egreso','Metodología PBL',
+          'Conexión externa','STEAM curricular',
+          'WiFi/enchufes','Sin restricciones','Accesibilidad','Espacio definido','Almacenamiento',
+          'Computadores','Software LMS','Audiovisual',
+          'Apoyo directivo','Historial innovación','Competencia digital','Líder maker','Plan formación DPD','Trabajo colectivo'
+        ],
+        datasets: [{
+          data: [100,90,85,80,80,0,30,90,95,50,40,30,80,75,70,95,80,20,0,25,40],
+          backgroundColor: [
+            '#1D4E3F','#1D4E3F','#1D4E3F','#1D4E3F','#1D4E3F','#9B2335','rgba(184,115,51,0.7)',
+            '#1D4E3F','#1D4E3F','rgba(184,115,51,0.7)','#9B2335','#9B2335',
+            '#1A3F6F','#1A3F6F','#1A3F6F',
+            '#1D4E3F','#1D4E3F','#9B2335','#9B2335','#9B2335','rgba(184,115,51,0.7)'
+          ],
+          borderRadius: 4, borderWidth: 0
+        }]
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.raw + ' / 100' } } },
+        scales: {
+          x: { min: 0, max: 100, ticks: { color: TC, font: { size: 11 } }, grid: { color: GC } },
+          y: { ticks: { color: TC, font: { size: 11 }, font: { size: 11 } }, grid: { display: false } }
+        }
+      }
+    });
+
+    // RADAR
+    new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Objetivos\neducativos','Infraestructura','Recursos\nequipamiento','Cultura\ninstitucional'],
+        datasets: [
+          { label: 'Potencial actual', data: [72,55,60,48], backgroundColor: 'rgba(29,78,63,0.15)', borderColor: '#1D4E3F', pointBackgroundColor: '#1D4E3F', borderWidth: 2, pointRadius: 4 },
+          { label: 'Umbral mínimo', data: [60,60,60,60], backgroundColor: 'rgba(155,35,53,0.06)', borderColor: '#9B2335', borderDash: [4,3], pointRadius: 2, borderWidth: 1.5 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { r: { min: 0, max: 100, ticks: { stepSize: 25, color: TC, font: { size: 11 }, backdropColor: 'transparent' }, grid: { color: GC }, angleLines: { color: GC }, pointLabels: { color: TC, font: { size: 11 } } } }
+      }
+    });
+  }
+
+  if (id === 'constructivismo') {
+    new Chart(document.getElementById('peiAlignChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Aprendizaje\nsignificativo','Metodologías\nactivas','Evaluación\nauténtica','Interdisciplina','Autonomía\nestudiantil','Colaboración\nentre pares','Vínculo con\ncomunidad','Creatividad\ne innovación'],
+        datasets: [
+          { label: 'Presencia actual en PEI', data: [75,60,70,30,35,50,40,35], backgroundColor: '#1D4E3F', borderRadius: 3, borderWidth: 0 },
+          { label: 'Potencial con MakerSpace', data: [95,95,90,85,90,90,80,95], backgroundColor: '#4A2D7A', borderRadius: 3, borderWidth: 0 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: TC, font: { size: 10 } }, grid: { display: false } },
+          y: { max: 100, ticks: { color: TC, font: { size: 11 }, callback: v => v + '%' }, grid: { color: GC } }
+        }
+      }
+    });
+  }
+
+  if (id === 'digital') {
+    new Chart(document.getElementById('toolsChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Audacity\n(Podcast)','Canva\n(Diseño)','DaVinci\n(Video)','Scratch\n(Programación)','Figma\n(UI/UX)','Tinkercad\n(3D)','Python\nBásico','Arduino\nIDE'],
+        datasets: [
+          { label: 'Complejidad técnica', data: [20,15,40,30,55,60,70,75], backgroundColor: '#1D4E3F', borderRadius: 3, borderWidth: 0 },
+          { label: 'Impacto pedagógico', data: [85,90,90,80,75,70,75,70], backgroundColor: '#1A3F6F', borderRadius: 3, borderWidth: 0 },
+          { label: 'Acceso con equipo disponible', data: [95,100,80,95,95,70,85,40], backgroundColor: '#B87333', borderRadius: 3, borderWidth: 0 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: TC, font: { size: 10 } }, grid: { display: false } },
+          y: { max: 110, ticks: { color: TC, font: { size: 11 }, callback: v => v + '%' }, grid: { color: GC } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('digcompChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Información\ny datos','Comunicación\ndigital','Creación\nde contenido','Seguridad\ndigital','Resolución\nde problemas','Colaboración\nen red','Pensamiento\ncomputacional'],
+        datasets: [
+          { label: 'Nivel actual', data: [35,45,20,40,30,35,15], backgroundColor: 'rgba(155,35,53,0.12)', borderColor: '#9B2335', pointBackgroundColor: '#9B2335', borderWidth: 2, pointRadius: 4 },
+          { label: 'Meta con MakerSpace', data: [75,85,90,65,80,80,60], backgroundColor: 'rgba(29,78,63,0.12)', borderColor: '#1D4E3F', pointBackgroundColor: '#1D4E3F', borderWidth: 2, pointRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { r: { min: 0, max: 100, ticks: { stepSize: 25, color: TC, font: { size: 10 }, backdropColor: 'transparent' }, grid: { color: GC }, angleLines: { color: GC }, pointLabels: { color: TC, font: { size: 11 } } } }
+      }
+    });
+  }
+
+  if (id === 'focos') {
+    new Chart(document.getElementById('alignChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Pens. crítico','Colaboración','Resolución\nproblemas','Ciudadanía','Comunic.\nmultimodal','Emprend.','Alfab.\ndigital','Creatividad'],
+        datasets: [
+          { label: 'Expresión Digital', data: [75,70,70,80,100,70,90,100], backgroundColor: '#1D4E3F', borderRadius: 3, borderWidth: 0 },
+          { label: 'Hub Emprendimiento Social', data: [80,90,85,100,75,100,70,85], backgroundColor: '#4A2D7A', borderRadius: 3, borderWidth: 0 },
+          { label: 'STEAM / Ciencias', data: [90,75,95,60,50,60,80,80], backgroundColor: 'rgba(184,115,51,0.7)', borderRadius: 3, borderWidth: 0 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: TC, font: { size: 11 } }, grid: { display: false } },
+          y: { max: 110, ticks: { color: TC, font: { size: 11 }, callback: v => v + '%' }, grid: { color: GC } }
+        }
+      }
+    });
+  }
+
+  if (id === 'espacios') {
+    new Chart(document.getElementById('espaciosChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Conectividad\neléctrica','WiFi','Ventilación','Iluminación','Flexib.\nlayout','Almacena-\nmiento','Equipam.\nbase','Piso','Accesibilidad'],
+        datasets: [
+          { label: 'Sala Computación', data: [95,90,85,80,70,50,95,80,60], backgroundColor: 'rgba(29,78,63,0.15)', borderColor: '#1D4E3F', pointBackgroundColor: '#1D4E3F', borderWidth: 2, pointRadius: 3 },
+          { label: 'Biblioteca', data: [25,85,80,50,65,80,20,30,65], backgroundColor: 'rgba(184,115,51,0.12)', borderColor: '#B87333', pointBackgroundColor: '#B87333', borderWidth: 2, pointRadius: 3 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { r: { min: 0, max: 100, ticks: { stepSize: 25, color: TC, font: { size: 11 }, backdropColor: 'transparent' }, grid: { color: GC }, angleLines: { color: GC }, pointLabels: { color: TC, font: { size: 11 } } } }
+      }
+    });
+  }
+
+  if (id === 'ruta') {
+    const labels = [
+      'Definir espacio','Inventario tecnológico','Identificar docente líder','Medir banda ancha','Postular SEP',
+      'Intervención mobiliario','Capacitación docente','Cursos piloto','1ª Feria interna',
+      'Currículo transversal','Postulación programas ext.','Impresora 3D / fab','Comunidad maker',
+      'Medición impacto','Informe y difusión','Certificación / alianzas'
+    ];
+    const starts = [0,0,0,0,0, 2,2,3,3, 4,4,5,5, 6,6,7];
+    const durations = [1,1,1,1,1, 1,2,1,1, 2,1,2,1, 1,1,1];
+    const colors = [
+      '#1D4E3F','#1D4E3F','#1D4E3F','#1D4E3F','#1D4E3F',
+      '#1A3F6F','#1A3F6F','#1A3F6F','#1A3F6F',
+      '#B87333','#B87333','#B87333','#B87333',
+      '#4A2D7A','#4A2D7A','#4A2D7A'
+    ];
+    new Chart(document.getElementById('roadmapChart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'offset', data: starts, backgroundColor: 'transparent' },
+          { label: 'Duración', data: durations, backgroundColor: colors, borderRadius: 4, borderWidth: 0 }
+        ]
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: {
+          label: (c) => c.datasetIndex === 1 ? ' ' + c.raw + ' semana' + (c.raw > 1 ? 's' : '') : ''
+        }}},
+        scales: {
+          x: { min: 0, max: 8, stacked: true, ticks: { color: TC, font: { size: 11 }, stepSize: 1, callback: v => 'S' + v }, grid: { color: GC } },
+          y: { stacked: true, ticks: { color: TC, font: { size: 11 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+}
+
+// Init first tab charts
+window.addEventListener('load', () => setTimeout(() => initChart('diagnostico'), 150));
+</script>
+
+</body>
+</html>
