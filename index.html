@@ -124,10 +124,9 @@
   .score-bar-fill { height: 100%; border-radius: 2px; }
 
   /* ── TABS ── */
-  .tab-nav-wrap { overflow-x: auto; width: 100%; margin-bottom: 1.5rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .tab-nav-wrap::-webkit-scrollbar { display: none; }
-  .tab-nav { display: flex; gap: 4px; background: var(--surface); border-radius: var(--radius-sm); padding: 4px; box-shadow: var(--shadow); width: max-content; min-width: 100%; }
-  .tab-btn { padding: 7px 18px; border-radius: 6px; border: none; background: transparent; color: var(--text-2); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s; white-space: nowrap; flex-shrink: 0; }
+  .tab-nav-wrap { width: 100%; margin-bottom: 1.5rem; }
+  .tab-nav { display: flex; flex-wrap: wrap; gap: 3px; background: var(--surface); border-radius: var(--radius-sm); padding: 4px; box-shadow: var(--shadow); }
+  .tab-btn { padding: 6px 13px; border-radius: 6px; border: none; background: transparent; color: var(--text-2); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.18s; white-space: nowrap; flex-shrink: 0; }
   .tab-btn:hover { color: var(--text); }
   .tab-btn.active { background: var(--accent); color: white; }
   .tab-panel { display: none; }
@@ -246,6 +245,28 @@
   hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
   /* ── FOOTER ── */
+  .sim-group { margin-bottom:14px; }
+  .sim-label-row { display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px; }
+  .sim-label { font-size:12px;font-weight:600;color:var(--text); }
+  .sim-val { font-size:13px;font-weight:700;color:var(--accent);font-family:'DM Serif Display',serif; }
+  .sim-hint { font-size:10px;color:var(--text-3);margin-top:3px;font-style:italic; }
+  .sim-slider { width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--surface2);border-radius:2px;outline:none;cursor:pointer; }
+  .sim-slider::-webkit-slider-thumb { -webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+  .sim-slider::-moz-range-thumb { width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;border:none; }
+  .sim-step-btn { padding:7px 16px;border-radius:6px;border:none;background:var(--surface2);color:var(--text-2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all 0.18s;flex-shrink:0; }
+  .sim-step-btn.active { background:var(--accent);color:white; }
+  .sim-option { display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:border-color 0.15s; }
+  .sim-option:has(input:checked) { border-color:var(--accent);background:var(--accent-light); }
+  .sim-option input[type=radio] { margin-top:3px;flex-shrink:0;accent-color:var(--accent); }
+  .sim-option-body { flex:1; }
+  .sim-option-title { font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap; }
+  .sim-option-desc { font-size:11px;color:var(--text-2);line-height:1.55; }
+  .sim-check { display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:12px;color:var(--text-2);line-height:1.5;background:var(--surface2); }
+  .sim-check input { margin-top:2px;accent-color:var(--accent);flex-shrink:0; }
+  .sim-check:has(input:checked) { background:var(--accent-light);color:var(--text); }
+  .sim-kpi-row { display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text-2); }
+  .sim-kpi-row strong { font-size:13px;color:var(--accent); }
+  .sim-equipo-exist { font-size:12px;color:var(--text-2);padding:5px 8px;background:var(--surface2);border-radius:4px; }
   .footer { text-align: center; padding: 2rem; font-size: 11px; color: var(--text-3); }
 
   /* ── RESPONSIVE ── */
@@ -329,6 +350,7 @@
     <button class="tab-btn" onclick="switchTab('focos',this)">Focos estratégicos</button>
     <button class="tab-btn" onclick="switchTab('espacios',this)">Evaluación de espacios</button>
     <button class="tab-btn" onclick="switchTab('ruta',this)">Ruta de implementación</button>
+    <button class="tab-btn" onclick="switchTab('simulador',this)">⚙ Simulador</button>
   </div>
   </div>
 
@@ -907,6 +929,26 @@
             <tr><td><span class="badge b-purple">Feria</span></td><td>Proyecto de feria con defensa pública</td><td>Todo lo anterior</td><td>Semestre</td><td>Integración de todas</td><td>Exhibición pública</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-top:16px;">
+      <div class="card">
+        <div class="card-title">Herramientas digitales — complejidad vs impacto vs acceso</div>
+        <div style="position:relative;height:240px;"><canvas id="toolsChart"></canvas></div>
+        <div class="legend" style="margin-top:8px;">
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Complejidad técnica</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1A3F6F"></span>Impacto pedagógico</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Acceso con equipo disponible</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Competencias DigComp — nivel actual vs meta con MakerSpace</div>
+        <div style="position:relative;height:240px;"><canvas id="digcompChart"></canvas></div>
+        <div class="legend" style="margin-top:8px;">
+          <span class="legend-item"><span class="legend-sq" style="background:#9B2335"></span>Nivel actual</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Meta 2 años</span>
+        </div>
       </div>
     </div>
 
@@ -1573,6 +1615,293 @@
     </div>
   </div>
 
+  <!-- TAB: SIMULADOR -->
+  <div id="tab-simulador" class="tab-panel">
+
+    <div style="background:linear-gradient(135deg,#1D4E3F,#2a6b58);color:white;border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-10px;bottom:-20px;font-size:7rem;opacity:0.07;pointer-events:none;">🏗</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:6px;">Constructor de MakerSpace</div>
+      <div style="font-family:\'DM Serif Display\',serif;font-size:1.3rem;line-height:1.5;margin-bottom:6px;">Toma decisiones reales: elige el espacio, el equipamiento, el modelo pedagógico y el equipo. El simulador proyecta viabilidad, costo y riesgo en tiempo real.</div>
+      <div style="font-size:12px;opacity:0.65;">Basado en los datos reales del diagnóstico de Los Agustinos · Marzo 2026</div>
+    </div>
+
+    <!-- PASOS -->
+    <div id="sim-steps-nav" style="display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;">
+      <button class="sim-step-btn active" onclick="simGoStep(1,this)">1 · Espacio</button>
+      <button class="sim-step-btn" onclick="simGoStep(2,this)">2 · Equipamiento</button>
+      <button class="sim-step-btn" onclick="simGoStep(3,this)">3 · Pedagogía</button>
+      <button class="sim-step-btn" onclick="simGoStep(4,this)">4 · Equipo humano</button>
+      <button class="sim-step-btn" onclick="simGoStep(5,this)">5 · Financiamiento</button>
+      <button class="sim-step-btn" onclick="simGoStep(6,this)">6 · Resultado ▶</button>
+    </div>
+
+    <!-- PASO 1: ESPACIO -->
+    <div id="sim-step-1" class="sim-step">
+      <div class="g2">
+        <div>
+          <div class="card mb">
+            <div class="card-title">¿Qué espacio usarás?</div>
+            <div style="font-size:12px;color:var(--text-3);margin-bottom:12px;">Según el diagnóstico hay 2 opciones reales identificadas</div>
+            <div id="pick-espacio" style="display:flex;flex-direction:column;gap:8px;">
+              <label class="sim-option" data-key="espacio" data-val="computacion">
+                <input type="radio" name="espacio" value="computacion" checked>
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Sala de Computación <span class="badge b-green">Recomendado</span></div>
+                  <div class="sim-option-desc">19 enchufes triple · 40 equipos · WiFi · AC · Sin restricciones · Mesas redistribuibles</div>
+                  <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+                    <span class="badge b-green">Capacidad eléctrica ✓</span>
+                    <span class="badge b-green">Ventilación ✓</span>
+                    <span class="badge b-amber">Armarios a reparar</span>
+                  </div>
+                </div>
+              </label>
+              <label class="sim-option" data-key="espacio" data-val="biblioteca">
+                <input type="radio" name="espacio" value="biblioteca">
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Biblioteca <span class="badge b-amber">Opción B</span></div>
+                  <div class="sim-option-desc">3 enchufes · 2 equipos · WiFi · AC · Parquet (sin herramientas) · Mesas fijas</div>
+                  <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+                    <span class="badge b-red">Enchufes insuficientes</span>
+                    <span class="badge b-red">Sin prototipado físico</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">¿Cuántas zonas quieres implementar?</div>
+            <div style="font-size:12px;color:var(--text-3);margin-bottom:12px;">Más zonas = más impacto pero más inversión inicial</div>
+            <div id="pick-zonas" style="display:flex;flex-direction:column;gap:8px;">
+              <label class="sim-check"><input type="checkbox" name="zona" value="digital" checked> <span><strong>Zona Digital</strong> — computadores + código (ya disponible · costo $0)</span></label>
+              <label class="sim-check"><input type="checkbox" name="zona" value="prototipado"> <span><strong>Zona Prototipado Físico</strong> — cartón, madera, herramientas (~$180K CLP)</span></label>
+              <label class="sim-check"><input type="checkbox" name="zona" value="electronica"> <span><strong>Zona Electrónica</strong> — Arduino, sensores, circuitos (~$320K CLP)</span></label>
+              <label class="sim-check"><input type="checkbox" name="zona" value="av"> <span><strong>Zona Audiovisual</strong> — grabación + edición (equipos disponibles · costo $0)</span></label>
+              <label class="sim-check"><input type="checkbox" name="zona" value="exhibicion"> <span><strong>Zona Exhibición</strong> — galería de proyectos (~$60K CLP)</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Vista previa del espacio</div>
+          <div id="sim-espacio-preview" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:6px;min-height:280px;"></div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
+            <div class="sim-kpi-row"><span>Costo habilitación estimado</span><strong id="kpi-costo-espacio">--</strong></div>
+            <div class="sim-kpi-row"><span>Capacidad simultánea</span><strong id="kpi-cap-espacio">--</strong></div>
+            <div class="sim-kpi-row"><span>Versatilidad maker</span><strong id="kpi-vers-espacio">--</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 2: EQUIPAMIENTO -->
+    <div id="sim-step-2" class="sim-step" style="display:none;">
+      <div class="g2">
+        <div>
+          <div class="card mb">
+            <div class="card-title">Equipamiento maker a adquirir</div>
+            <div style="font-size:12px;color:var(--text-3);margin-bottom:12px;">Marca lo que planeas comprar en fase 1. Los equipos disponibles ya están incluidos.</div>
+            <div id="pick-equipos" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Equipos ya disponibles en el colegio</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div class="sim-equipo-exist">✓ 20 computadores AIO de escritorio</div>
+              <div class="sim-equipo-exist">✓ 20 notebooks HP (nuevos)</div>
+              <div class="sim-equipo-exist">✓ 2 equipos Gear</div>
+              <div class="sim-equipo-exist">✓ Cámaras y micrófonos (audiovisual)</div>
+              <div class="sim-equipo-exist">✓ 1 impresora estándar</div>
+              <div class="sim-equipo-exist" style="color:var(--amber);">⚠ 3 armarios con cierre inseguro (reparar)</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Resumen de equipamiento</div>
+          <div id="sim-equipo-summary" style="margin-bottom:14px;"></div>
+          <canvas id="simEquipoChart" style="max-height:200px;"></canvas>
+          <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);">
+            <div class="sim-kpi-row"><span>Inversión en equipamiento</span><strong id="kpi-costo-equipo">--</strong></div>
+            <div class="sim-kpi-row"><span>Potencial técnico maker</span><strong id="kpi-potencial-equipo">--</strong></div>
+            <div class="sim-kpi-row"><span>Curva de aprendizaje</span><strong id="kpi-curva-equipo">--</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 3: PEDAGOGÍA -->
+    <div id="sim-step-3" class="sim-step" style="display:none;">
+      <div class="g2">
+        <div>
+          <div class="card mb">
+            <div class="card-title">Modelo pedagógico del MakerSpace</div>
+            <div id="pick-pedagogia" style="display:flex;flex-direction:column;gap:8px;">
+              <label class="sim-option" data-key="pedagogia" data-val="taller">
+                <input type="radio" name="pedagogia" value="taller">
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Taller con instrucción <span class="badge b-amber">Riesgo</span></div>
+                  <div class="sim-option-desc">Un docente enseña técnica específica, todos replican. Fácil de gestionar pero limita la exploración y reproduce el modelo escolar tradicional.</div>
+                </div>
+              </label>
+              <label class="sim-option" data-key="pedagogia" data-val="abp">
+                <input type="radio" name="pedagogia" value="abp" checked>
+                <div class="sim-option-body">
+                  <div class="sim-option-title">ABP con producto maker <span class="badge b-green">Recomendado</span></div>
+                  <div class="sim-option-desc">Los estudiantes definen un problema, investigan, crean un prototipo y lo presentan a una audiencia real. Conecta con el PEI declarado del colegio.</div>
+                </div>
+              </label>
+              <label class="sim-option" data-key="pedagogia" data-val="libre">
+                <input type="radio" name="pedagogia" value="libre">
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Exploración libre <span class="badge b-blue">Avanzado</span></div>
+                  <div class="sim-option-desc">Los estudiantes eligen qué construir sin agenda curricular definida. Máximo construccionismo — requiere cultura maker instalada y un líder experimentado.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Evaluación de los proyectos maker</div>
+            <div id="pick-evaluacion" style="display:flex;flex-direction:column;gap:6px;">
+              <label class="sim-check"><input type="checkbox" name="eval" value="rubrica" checked> <span><strong>Rúbrica maker</strong> — proceso + producto + reflexión</span></label>
+              <label class="sim-check"><input type="checkbox" name="eval" value="portfolio"> <span><strong>Portfolio de proceso</strong> — versiones del prototipo + decisiones</span></label>
+              <label class="sim-check"><input type="checkbox" name="eval" value="pares"> <span><strong>Evaluación entre pares</strong> — feedback de la comunidad</span></label>
+              <label class="sim-check"><input type="checkbox" name="eval" value="audiencia"> <span><strong>Audiencia real</strong> — feria, video publicado, defensa externa</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Impacto pedagógico proyectado</div>
+          <canvas id="simPedagoChart" style="max-height:240px;margin-bottom:14px;"></canvas>
+          <div id="sim-pedagogia-desc" style="font-size:12px;color:var(--text-2);line-height:1.7;padding:10px;background:var(--surface2);border-radius:var(--radius-sm);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 4: EQUIPO HUMANO -->
+    <div id="sim-step-4" class="sim-step" style="display:none;">
+      <div class="g2">
+        <div>
+          <div class="card mb">
+            <div class="card-title">¿Quién lidera el MakerSpace?</div>
+            <div id="pick-lider" style="display:flex;flex-direction:column;gap:8px;">
+              <label class="sim-option" data-key="lider" data-val="nadie">
+                <input type="radio" name="lider" value="nadie">
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Sin líder definido <span class="badge b-red">Crítico</span></div>
+                  <div class="sim-option-desc">Situación actual (P32). El MakerSpace depende de la voluntad de cada docente. Alta probabilidad de abandono.</div>
+                </div>
+              </label>
+              <label class="sim-option" data-key="lider" data-val="docente">
+                <input type="radio" name="lider" value="docente" checked>
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Docente con horas asignadas <span class="badge b-green">Recomendado</span></div>
+                  <div class="sim-option-desc">El docente innovador identificado (P7 — ferias de ciencias) con horas formales. No voluntario, sino con responsabilidad oficial.</div>
+                </div>
+              </label>
+              <label class="sim-option" data-key="lider" data-val="paradocente">
+                <input type="radio" name="lider" value="paradocente">
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Paradocente capacitado <span class="badge b-amber">Complementario</span></div>
+                  <div class="sim-option-desc">Gestiona el espacio día a día (P19). Ideal como soporte, no como único responsable pedagógico.</div>
+                </div>
+              </label>
+              <label class="sim-option" data-key="lider" data-val="estudiante">
+                <input type="radio" name="lider" value="estudiante">
+                <div class="sim-option-body">
+                  <div class="sim-option-title">Estudiante referente maker <span class="badge b-blue">Papert</span></div>
+                  <div class="sim-option-desc">El estudiante que ya construye fuera (P26) como primer referente. Inverso al modelo tradicional — los pares enseñan a los pares.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card mb">
+            <div class="card-title">Formación del equipo</div>
+            <div id="pick-formacion" style="display:flex;flex-direction:column;gap:6px;">
+              <label class="sim-check"><input type="checkbox" name="form" value="taller2d" checked> <span><strong>Taller 2 días</strong> — cultura maker + metodología (mínimo indispensable)</span></label>
+              <label class="sim-check"><input type="checkbox" name="form" value="visita"> <span><strong>Visita a MakerSpace activo</strong> — UDD Maule / Colabi (ver en operación)</span></label>
+              <label class="sim-check"><input type="checkbox" name="form" value="comunidad"> <span><strong>Red online de makers</strong> — Telegram/Slack con pares regionales</span></label>
+              <label class="sim-check"><input type="checkbox" name="form" value="mentoria"> <span><strong>Mentoría mensual</strong> — acompañamiento externo (Colabi) por 6 meses</span></label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Proyección de adopción docente</div>
+            <div id="sim-adopcion-visual" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.6;" id="sim-lider-insight"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 5: FINANCIAMIENTO -->
+    <div id="sim-step-5" class="sim-step" style="display:none;">
+      <div class="g2">
+        <div>
+          <div class="card mb">
+            <div class="card-title">Fuentes de financiamiento a activar</div>
+            <div id="pick-financiamiento" style="display:flex;flex-direction:column;gap:8px;">
+              <label class="sim-check fuente-check"><input type="checkbox" name="fuente" value="sep" data-monto="800000" checked> <span><strong>SEP</strong> — Subvención Escolar Preferencial · hasta $800K fase 1 con plan pedagógico</span></label>
+              <label class="sim-check fuente-check"><input type="checkbox" name="fuente" value="pme" data-monto="500000"> <span><strong>PME MINEDUC</strong> — Plan de Mejoramiento · ítem tecnología · hasta $500K</span></label>
+              <label class="sim-check fuente-check"><input type="checkbox" name="fuente" value="corfo" data-monto="1500000"> <span><strong>CORFO Educación</strong> — Innovación escolar · postulación anual · hasta $1.5M</span></label>
+              <label class="sim-check fuente-check"><input type="checkbox" name="fuente" value="gore" data-monto="600000"> <span><strong>GORE Maule · FNDR</strong> — Proyectos educativos territoriales · hasta $600K</span></label>
+              <label class="sim-check fuente-check"><input type="checkbox" name="fuente" value="fundacion" data-monto="400000"> <span><strong>Fundaciones privadas</strong> — Telefónica, Arauco Educa, BHP · hasta $400K</span></label>
+              <label class="sim-check fuente-check"><input type="checkbox" name="fuente" value="reciclaje" data-monto="80000"> <span><strong>Materiales reciclados</strong> — Red de empresas locales y apoderados · ~$80K equivalente</span></label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Semanas de fase 1</div>
+            <div class="sim-group" style="margin-bottom:0;">
+              <div class="sim-label-row">
+                <span class="sim-label">Duración piloto</span>
+                <span class="sim-val" id="v-semanas2">8 semanas</span>
+              </div>
+              <input type="range" class="sim-slider" id="s-semanas2" min="4" max="20" value="8" oninput="simBuildUpdate()">
+            </div>
+            <div class="sim-group" style="margin-bottom:0;margin-top:12px;">
+              <div class="sim-label-row">
+                <span class="sim-label">Cursos piloto simultáneos</span>
+                <span class="sim-val" id="v-cursos2">2 cursos</span>
+              </div>
+              <input type="range" class="sim-slider" id="s-cursos2" min="1" max="8" value="2" oninput="simBuildUpdate()">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Balance financiero fase 1</div>
+          <div id="sim-fin-balance" style="margin-bottom:14px;"></div>
+          <canvas id="simFinChart" style="max-height:200px;margin-bottom:12px;"></canvas>
+          <div id="sim-fin-alerta" style="font-size:12px;line-height:1.6;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 6: RESULTADO -->
+    <div id="sim-step-6" class="sim-step" style="display:none;">
+      <div id="sim-resultado-header" style="border-radius:var(--radius);padding:1.5rem;margin-bottom:16px;text-align:center;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;" id="sim-resultado-kpis"></div>
+      <div class="g2 mb2">
+        <div class="card">
+          <div class="card-title">Radar de viabilidad final</div>
+          <div style="position:relative;height:260px;"><canvas id="simResultRadar"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Plan de acción recomendado — primeras 8 semanas</div>
+          <div id="sim-plan-accion" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Resumen de decisiones tomadas</div>
+        <div id="sim-resumen-decisiones" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+      </div>
+    </div>
+
+    <!-- NAV INFERIOR -->
+    <div style="display:flex;justify-content:space-between;margin-top:20px;">
+      <button id="sim-btn-prev" onclick="simNav(-1)" style="display:none;padding:9px 20px;background:var(--surface2);border:none;border-radius:var(--radius-sm);font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text);">← Anterior</button>
+      <div></div>
+      <button id="sim-btn-next" onclick="simNav(1)" style="padding:9px 24px;background:var(--accent);border:none;border-radius:var(--radius-sm);font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:white;">Siguiente →</button>
+    </div>
+
+  </div>
+
 </main>
 
 <footer class="footer">
@@ -1809,6 +2138,436 @@ function initChart(id) {
 
 // Init first tab charts
 window.addEventListener('load', () => setTimeout(() => initChart('diagnostico'), 150));
+
+// ============================================================
+// SIMULADOR CONSTRUCTOR DE MAKERSPACE
+// ============================================================
+
+const SIM = {
+  currentStep: 1,
+  totalSteps: 6,
+  charts: {},
+  state: {
+    espacio: 'computacion',
+    zonas: ['digital','av'],
+    equipos: [],
+    pedagogia: 'abp',
+    evaluacion: ['rubrica'],
+    lider: 'docente',
+    formacion: ['taller2d'],
+    fuentes: ['sep'],
+    semanas: 8,
+    cursos: 2
+  }
+};
+
+const EQUIPOS_CATALOG = [
+  { id:'arduino',   name:'Kit Arduino Uno × 5',        costo:125000, potencial:80, curva:'Media',   icon:'⚡' },
+  { id:'microbit',  name:'micro:bit v2 × 5',           costo:110000, potencial:75, curva:'Baja',    icon:'🔵' },
+  { id:'impresora3d',name:'Impresora 3D FDM',          costo:280000, potencial:90, curva:'Alta',    icon:'🖨' },
+  { id:'sensores',  name:'Set sensores variados × 10', costo:30000,  potencial:65, curva:'Media',   icon:'📡' },
+  { id:'laser',     name:'Cortadora láser básica',     costo:850000, potencial:95, curva:'Alta',    icon:'🔦' },
+  { id:'materiales',name:'Pack materiales físicos',    costo:85000,  potencial:55, curva:'Muy baja',icon:'📦' },
+  { id:'soldadura', name:'Estaciones soldadura × 3',  costo:45000,  potencial:60, curva:'Alta',    icon:'🔧' },
+  { id:'camara360', name:'Cámara 360° para proyectos', costo:95000,  potencial:50, curva:'Baja',    icon:'📷' },
+];
+
+const ZONAS_CONFIG = {
+  digital:     { label:'Digital / Código',     color:'#1D4E3F', costo:0,      cap:20 },
+  prototipado: { label:'Prototipado Físico',    color:'#B87333', costo:180000, cap:12 },
+  electronica: { label:'Electrónica',           color:'#1A3F6F', costo:320000, cap:8  },
+  av:          { label:'Audiovisual',           color:'#4A2D7A', costo:0,      cap:6  },
+  exhibicion:  { label:'Exhibición',            color:'#9B2335', costo:60000,  cap:30 },
+};
+
+function simGoStep(n, btn) {
+  simSaveState();
+  document.querySelectorAll('.sim-step').forEach(s => s.style.display = 'none');
+  document.getElementById('sim-step-' + n).style.display = 'block';
+  document.querySelectorAll('.sim-step-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  SIM.currentStep = n;
+  document.getElementById('sim-btn-prev').style.display = n > 1 ? 'block' : 'none';
+  document.getElementById('sim-btn-next').style.display = n < SIM.totalSteps ? 'block' : 'none';
+  if (n === 6) { document.getElementById('sim-btn-next').style.display = 'none'; }
+  simBuildUpdate();
+  if (n === 6) simBuildResult();
+}
+
+function simNav(dir) {
+  const next = SIM.currentStep + dir;
+  if (next < 1 || next > SIM.totalSteps) return;
+  const btn = document.querySelectorAll('.sim-step-btn')[next - 1];
+  simGoStep(next, btn);
+}
+
+function simSaveState() {
+  // espacio
+  const esp = document.querySelector('input[name="espacio"]:checked');
+  if (esp) SIM.state.espacio = esp.value;
+  // zonas
+  SIM.state.zonas = [...document.querySelectorAll('input[name="zona"]:checked')].map(i => i.value);
+  // equipos
+  SIM.state.equipos = [...document.querySelectorAll('input[name="equipo"]:checked')].map(i => i.value);
+  // pedagogia
+  const ped = document.querySelector('input[name="pedagogia"]:checked');
+  if (ped) SIM.state.pedagogia = ped.value;
+  // evaluacion
+  SIM.state.evaluacion = [...document.querySelectorAll('input[name="eval"]:checked')].map(i => i.value);
+  // lider
+  const lid = document.querySelector('input[name="lider"]:checked');
+  if (lid) SIM.state.lider = lid.value;
+  // formacion
+  SIM.state.formacion = [...document.querySelectorAll('input[name="form"]:checked')].map(i => i.value);
+  // fuentes
+  SIM.state.fuentes = [...document.querySelectorAll('input[name="fuente"]:checked')].map(i => i.value);
+  // sliders
+  const s2 = document.getElementById('s-semanas2');
+  if (s2) SIM.state.semanas = parseInt(s2.value);
+  const c2 = document.getElementById('s-cursos2');
+  if (c2) SIM.state.cursos = parseInt(c2.value);
+}
+
+function fmtCLP(n) {
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M CLP';
+  return '$' + Math.round(n/1000) + 'K CLP';
+}
+
+function simBuildUpdate() {
+  const step = SIM.currentStep;
+  if (step === 1) simUpdateEspacio();
+  if (step === 2) simUpdateEquipo();
+  if (step === 3) simUpdatePedagogia();
+  if (step === 4) simUpdateEquipoHumano();
+  if (step === 5) simUpdateFinanciamiento();
+}
+
+// PASO 1
+function simUpdateEspacio() {
+  const esp = (document.querySelector('input[name="espacio"]:checked') || {}).value || 'computacion';
+  const zonas = [...document.querySelectorAll('input[name="zona"]:checked')].map(i => i.value);
+  const costZonas = zonas.reduce((s,z) => s + (ZONAS_CONFIG[z]?.costo || 0), 0);
+  const costEsp = esp === 'computacion' ? 45000 : 120000;
+  const total = costEsp + costZonas;
+  const cap = esp === 'computacion' ? Math.min(40, zonas.reduce((s,z) => s + (ZONAS_CONFIG[z]?.cap || 0), 0)) : 12;
+  const vers = zonas.length;
+  const el = id => document.getElementById(id);
+  if(el('kpi-costo-espacio')) el('kpi-costo-espacio').textContent = fmtCLP(total);
+  if(el('kpi-cap-espacio'))   el('kpi-cap-espacio').textContent   = cap + ' estudiantes simultáneos';
+  if(el('kpi-vers-espacio'))  el('kpi-vers-espacio').textContent  = vers + ' zonas activas — ' + (vers >= 3 ? 'Alta' : vers === 2 ? 'Media' : 'Básica');
+
+  const preview = el('sim-espacio-preview');
+  if (!preview) return;
+  const all = ['digital','prototipado','electronica','av','exhibicion'];
+  preview.innerHTML = '';
+  all.forEach(z => {
+    const cfg = ZONAS_CONFIG[z];
+    const active = zonas.includes(z);
+    preview.innerHTML += `<div style="padding:10px;border-radius:var(--radius-sm);background:${active ? cfg.color + '18' : 'var(--surface2)'};border:1.5px solid ${active ? cfg.color : 'transparent'};transition:all 0.2s;">
+      <div style="font-size:11px;font-weight:600;color:${active ? cfg.color : 'var(--text-3)'};">${cfg.label}</div>
+      <div style="font-size:10px;color:var(--text-3);margin-top:2px;">${active ? fmtCLP(cfg.costo) + (cfg.costo===0?' · disponible':'') : 'no incluida'}</div>
+    </div>`;
+  });
+}
+
+// PASO 2
+function simUpdateEquipo() {
+  const container = document.getElementById('pick-equipos');
+  if (container && container.children.length === 0) {
+    container.innerHTML = EQUIPOS_CATALOG.map(eq => `
+      <label class="sim-check"><input type="checkbox" name="equipo" value="${eq.id}" onchange="simBuildUpdate()">
+      <span>${eq.icon} <strong>${eq.name}</strong> · ${fmtCLP(eq.costo)} · Curva: ${eq.curva}</span></label>`).join('');
+  }
+  const selected = [...document.querySelectorAll('input[name="equipo"]:checked')].map(i => i.value);
+  const items = EQUIPOS_CATALOG.filter(e => selected.includes(e.id));
+  const total = items.reduce((s,e) => s + e.costo, 0);
+  const potencial = items.length ? Math.round(items.reduce((s,e) => s + e.potencial, 0) / items.length) : 0;
+  const curvaScore = items.length ? items.filter(e => e.curva === 'Alta').length / items.length : 0;
+  const curvaLabel = curvaScore > 0.5 ? 'Alta (requiere capacitación docente)' : curvaScore > 0.2 ? 'Media' : 'Baja — ideal para inicio';
+
+  const el = id => document.getElementById(id);
+  if(el('kpi-costo-equipo')) el('kpi-costo-equipo').textContent = fmtCLP(total);
+  if(el('kpi-potencial-equipo')) el('kpi-potencial-equipo').textContent = potencial + '%';
+  if(el('kpi-curva-equipo')) el('kpi-curva-equipo').textContent = curvaLabel;
+
+  const sumEl = el('sim-equipo-summary');
+  if (sumEl) sumEl.innerHTML = items.length === 0
+    ? '<div style="font-size:12px;color:var(--text-3);padding:8px;">Sin equipos adicionales seleccionados — solo los disponibles</div>'
+    : items.map(e => `<div class="sim-kpi-row"><span>${e.icon} ${e.name}</span><strong>${fmtCLP(e.costo)}</strong></div>`).join('');
+
+  if (el('simEquipoChart')) {
+    const labels = ['Dig. disponible', ...items.map(e => e.name.split(' ')[0])];
+    const vals   = [65, ...items.map(e => e.potencial)];
+    const colors = ['#1D4E3F', ...items.map((_,i) => ['#1A3F6F','#B87333','#4A2D7A','#9B2335','#2a6b58','#6B4226','#1A3F6F','#4A2D7A'][i % 8])];
+    if (SIM.charts.equipo) { SIM.charts.equipo.destroy(); }
+    SIM.charts.equipo = new Chart(el('simEquipoChart'), {
+      type:'bar',
+      data:{ labels, datasets:[{ data:vals, backgroundColor:colors, borderRadius:4, borderWidth:0 }] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{ x:{ ticks:{ color:TC, font:{ size:10 } }, grid:{ display:false } },
+                 y:{ max:100, ticks:{ color:TC, font:{ size:10 }, callback: v => v+'%' }, grid:{ color:GC } } } }
+    });
+  }
+}
+
+// PASO 3
+function simUpdatePedagogia() {
+  const ped = (document.querySelector('input[name="pedagogia"]:checked') || {}).value || 'abp';
+  const evals = [...document.querySelectorAll('input[name="eval"]:checked')].map(i => i.value);
+  const evalScore = evals.length * 25;
+
+  const scores = {
+    taller:     [40, 30, 25, 60, 35, 50],
+    abp:        [85, 80, 90, 75, 85, 80],
+    libre:      [95, 90, 95, 60, 90, 70],
+  };
+  const labels = ['Aprendizaje\nsignificativo','Autonomía\nestudiantil','Identidad\ncreadora','Gestión\ndocente','Conexión\ncurricular','Evaluación\nauténtica'];
+  const current = scores[ped] || scores.abp;
+  const adjusted = current.map((v,i) => i === 5 ? Math.min(100, v + evalScore * 0.1) : v);
+
+  if (document.getElementById('simPedagoChart')) {
+    if (SIM.charts.pedago) SIM.charts.pedago.destroy();
+    SIM.charts.pedago = new Chart(document.getElementById('simPedagoChart'), {
+      type:'radar',
+      data:{ labels, datasets:[{
+        label: ped, data: adjusted,
+        backgroundColor:'rgba(29,78,63,0.15)', borderColor:'#1D4E3F',
+        pointBackgroundColor:'#1D4E3F', borderWidth:2, pointRadius:4
+      }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
+        scales:{ r:{ min:0, max:100, ticks:{ display:false }, grid:{ color:'rgba(0,0,0,0.07)' },
+                     angleLines:{ color:'rgba(0,0,0,0.07)' }, pointLabels:{ font:{ size:10 }, color:TC } } } }
+    });
+  }
+
+  const descs = {
+    taller: '⚠ El modelo de taller reproduce el aula tradicional dentro del MakerSpace. Fácil de arrancar pero difícil de sostener — los estudiantes lo perciben como "otra clase". Útil solo como punto de entrada en las primeras 2 semanas.',
+    abp: '✓ ABP con producto maker es el modelo más coherente con el PEI de Los Agustinos (OE2 — metodologías activo-participativas). El estudiante define el problema, itera el prototipo y lo presenta ante una audiencia real. Compatible con evaluación SEP-friendly.',
+    libre: '★ Exploración libre es el construccionismo puro de Papert. Alto impacto — pero requiere un líder maker consolidado y al menos 1 semestre de cultura maker instalada. Recomendado para fase 2, no para el piloto inicial.',
+  };
+  const descEl = document.getElementById('sim-pedagogia-desc');
+  if (descEl) descEl.textContent = descs[ped] || descs.abp;
+}
+
+// PASO 4
+function simUpdateEquipoHumano() {
+  const lider = (document.querySelector('input[name="lider"]:checked') || {}).value || 'docente';
+  const form  = [...document.querySelectorAll('input[name="form"]:checked')].map(i => i.value);
+
+  const liderScore = { nadie:10, docente:75, paradocente:50, estudiante:60 }[lider] || 50;
+  const formScore  = Math.min(100, form.length * 22 + liderScore * 0.3);
+
+  const semanas = ['1–2','3–4','5–6','7–8','9–12'];
+  const adopBase = { nadie:[5,8,10,10,12], docente:[30,45,55,65,70], paradocente:[20,30,38,42,48], estudiante:[25,40,52,60,65] };
+  const data = adopBase[lider] || adopBase.docente;
+
+  const container = document.getElementById('sim-adopcion-visual');
+  if (container) {
+    container.innerHTML = semanas.map((s,i) => `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:10px;color:var(--text-3);width:40px;flex-shrink:0;">S${s}</span>
+        <div style="flex:1;height:14px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${data[i]}%;background:var(--accent);border-radius:3px;transition:width 0.4s;"></div>
+        </div>
+        <span style="font-size:11px;font-weight:600;color:var(--accent);width:32px;text-align:right;">${data[i]}%</span>
+      </div>`).join('');
+  }
+
+  const insights = {
+    nadie: '⚠ Sin líder definido, la adopción docente se estanca debajo del 15% y el MakerSpace se convierte en un espacio subutilizado. Riesgo de abandono antes de la semana 6.',
+    docente: '✓ Un docente con horas formales asignadas es el factor individual con mayor impacto en la adopción. El colegio ya tiene un candidato natural: el docente que lleva estudiantes a ferias de ciencias (P7).',
+    paradocente: '→ El paradocente gestiona el espacio con eficiencia pero no tiene autoridad pedagógica. Combinar con al menos 1 docente que lo respalde en las planificaciones.',
+    estudiante: '★ El estudiante referente maker es la estrategia más construccionista. Genera credibilidad entre pares y rompe la jerarquía tradicional. Complementar con un docente facilitador.',
+  };
+  const insEl = document.getElementById('sim-lider-insight');
+  if (insEl) insEl.textContent = insights[lider] || '';
+}
+
+// PASO 5
+function simUpdateFinanciamiento() {
+  const s2El = document.getElementById('s-semanas2');
+  const c2El = document.getElementById('s-cursos2');
+  if (s2El) { SIM.state.semanas = parseInt(s2El.value); document.getElementById('v-semanas2').textContent = SIM.state.semanas + ' semanas'; }
+  if (c2El) { SIM.state.cursos = parseInt(c2El.value); document.getElementById('v-cursos2').textContent = SIM.state.cursos + ' cursos'; }
+
+  const fuentes = [...document.querySelectorAll('input[name="fuente"]:checked')];
+  const ingresos = fuentes.reduce((s,f) => s + parseInt(f.dataset.monto||0), 0);
+
+  const zonas = [...document.querySelectorAll('input[name="zona"]:checked')].map(i => i.value);
+  const equipos = [...document.querySelectorAll('input[name="equipo"]:checked')].map(i => i.value);
+  const liderVal = (document.querySelector('input[name="lider"]:checked')||{}).value||'docente';
+  const form = [...document.querySelectorAll('input[name="form"]:checked')].map(i => i.value);
+
+  const costoZonas    = zonas.reduce((s,z) => s + (ZONAS_CONFIG[z]?.costo||0), 0);
+  const costoEquipos  = EQUIPOS_CATALOG.filter(e => equipos.includes(e.id)).reduce((s,e) => s+e.costo, 0);
+  const costoMat      = SIM.state.semanas * SIM.state.cursos * 8500;
+  const costoForm     = form.length * 35000 + (form.includes('mentoria') ? 180000 : 0);
+  const costoEspacio  = SIM.state.espacio === 'computacion' ? 45000 : 120000;
+  const totalGasto    = costoZonas + costoEquipos + costoMat + costoForm + costoEspacio;
+  const balance       = ingresos - totalGasto;
+
+  SIM.state._totalGasto   = totalGasto;
+  SIM.state._ingresos     = ingresos;
+  SIM.state._balance      = balance;
+
+  const balEl = document.getElementById('sim-fin-balance');
+  if (balEl) balEl.innerHTML = [
+    ['Habilitación espacio', costoEspacio],
+    ['Zonas maker', costoZonas],
+    ['Equipamiento nuevo', costoEquipos],
+    ['Materiales consumibles', costoMat],
+    ['Formación equipo', costoForm],
+  ].map(([l,v]) => `<div class="sim-kpi-row"><span>${l}</span><strong style="color:var(--red);">-${fmtCLP(v)}</strong></div>`).join('')
+   + `<div class="sim-kpi-row" style="padding-top:8px;border-top:2px solid var(--border);margin-top:4px;"><span><strong>Total gasto fase 1</strong></span><strong style="color:var(--red);">${fmtCLP(totalGasto)}</strong></div>`
+   + `<div class="sim-kpi-row"><span><strong>Financiamiento activado</strong></span><strong style="color:var(--accent);">+${fmtCLP(ingresos)}</strong></div>`
+   + `<div class="sim-kpi-row"><span><strong>Balance</strong></span><strong style="color:${balance >= 0 ? 'var(--accent)' : 'var(--red)'};">${balance >= 0 ? '+' : ''}${fmtCLP(balance)}</strong></div>`;
+
+  if (document.getElementById('simFinChart')) {
+    if (SIM.charts.fin) SIM.charts.fin.destroy();
+    SIM.charts.fin = new Chart(document.getElementById('simFinChart'), {
+      type:'bar',
+      data:{ labels:['Gasto total','Financiamiento'],
+             datasets:[{ data:[totalGasto, ingresos],
+               backgroundColor:[totalGasto > ingresos ? '#9B2335' : '#B87333','#1D4E3F'],
+               borderRadius:6, borderWidth:0 }] },
+      options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{ x:{ ticks:{ color:TC, font:{size:10}, callback: v => fmtCLP(v) }, grid:{ color:GC } },
+                 y:{ ticks:{ color:TC, font:{size:12} }, grid:{ display:false } } } }
+    });
+  }
+
+  const alertEl = document.getElementById('sim-fin-alerta');
+  if (alertEl) {
+    if (balance < 0) {
+      alertEl.innerHTML = `<div style="padding:10px 12px;background:var(--red-light);border-left:3px solid var(--red);border-radius:0 6px 6px 0;font-size:12px;color:var(--text-2);">
+        ⚠ El financiamiento activado no cubre el gasto estimado. Déficit de <strong>${fmtCLP(Math.abs(balance))}</strong>. Reducir equipamiento de fase 1 o activar más fuentes de financiamiento.</div>`;
+    } else if (balance > 500000) {
+      alertEl.innerHTML = `<div style="padding:10px 12px;background:var(--accent-light);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:12px;color:var(--text-2);">
+        ✓ Superávit de <strong>${fmtCLP(balance)}</strong>. Reservar para materiales de fase 2 o impresora 3D.</div>`;
+    } else {
+      alertEl.innerHTML = `<div style="padding:10px 12px;background:var(--amber-light);border-left:3px solid var(--amber);border-radius:0 6px 6px 0;font-size:12px;color:var(--text-2);">
+        → Margen ajustado de <strong>${fmtCLP(balance)}</strong>. Priorizar gastos inamovibles primero y dejar materiales consumibles para compra incremental.</div>`;
+    }
+  }
+}
+
+// PASO 6: RESULTADO FINAL
+function simBuildResult() {
+  simSaveState();
+  const s = SIM.state;
+
+  // Score
+  const espScore  = s.espacio === 'computacion' ? 90 : 40;
+  const zonasScore= Math.min(100, s.zonas.length * 20);
+  const equipScore= Math.min(100, s.equipos.length * 15 + 30);
+  const pedScore  = { taller:40, abp:85, libre:70 }[s.pedagogia] || 70;
+  const evalScore = Math.min(100, s.evaluacion.length * 25);
+  const liderScore= { nadie:10, docente:85, paradocente:50, estudiante:65 }[s.lider] || 50;
+  const formScore = Math.min(100, s.formacion.length * 25);
+  const finScore  = s._ingresos >= s._totalGasto ? 90 : Math.round(s._ingresos / Math.max(s._totalGasto, 1) * 80);
+
+  const viabilidad = Math.round(
+    espScore*0.12 + zonasScore*0.10 + equipScore*0.10 + pedScore*0.20 +
+    evalScore*0.08 + liderScore*0.22 + formScore*0.08 + finScore*0.10
+  );
+
+  // Header
+  let hColor, hLabel, hDesc;
+  if (viabilidad >= 75) { hColor='#1D4E3F'; hLabel='MakerSpace viable — listo para iniciar'; hDesc='Las decisiones tomadas configuran un MakerSpace con alta probabilidad de éxito. Definir fecha de inicio y comunicar al cuerpo docente.'; }
+  else if (viabilidad >= 55) { hColor='#B87333'; hLabel='Viable con ajustes críticos'; hDesc='El proyecto puede iniciar, pero hay decisiones que deben revisarse antes de la semana 1 del piloto.'; }
+  else { hColor='#9B2335'; hLabel='Configuración de alto riesgo'; hDesc='Las decisiones actuales hacen probable el fracaso del piloto. Revisar especialmente liderazgo y financiamiento.'; }
+
+  const hEl = document.getElementById('sim-resultado-header');
+  if (hEl) hEl.innerHTML = `<div style="background:${hColor};color:white;border-radius:var(--radius);padding:1.25rem 1.5rem;">
+    <div style="font-family:'DM Serif Display',serif;font-size:3rem;line-height:1;">${viabilidad}%</div>
+    <div style="font-size:14px;font-weight:600;margin:6px 0;">${hLabel}</div>
+    <div style="font-size:12px;opacity:0.8;">${hDesc}</div>
+  </div>`;
+
+  // KPIs
+  const kpis = [
+    { label:'Impacto pedagógico', val: Math.round(pedScore*0.6 + evalScore*0.4) },
+    { label:'Riesgo de abandono', val: Math.round(100 - liderScore*0.5 - finScore*0.3 - formScore*0.2) },
+    { label:'Sustentabilidad 12m', val: Math.round(finScore*0.4 + formScore*0.3 + liderScore*0.3) },
+  ];
+  const kpiEl = document.getElementById('sim-resultado-kpis');
+  if (kpiEl) kpiEl.innerHTML = kpis.map(k => `
+    <div class="card" style="text-align:center;padding:1rem;">
+      <div style="font-family:'DM Serif Display',serif;font-size:2.5rem;color:var(--accent);">${k.val}%</div>
+      <div style="font-size:12px;color:var(--text-2);margin-top:4px;">${k.label}</div>
+    </div>`).join('');
+
+  // Radar
+  const radarData = [espScore, zonasScore, equipScore, pedScore, liderScore, formScore, finScore, evalScore];
+  if (document.getElementById('simResultRadar')) {
+    if (SIM.charts.resultRadar) SIM.charts.resultRadar.destroy();
+    SIM.charts.resultRadar = new Chart(document.getElementById('simResultRadar'), {
+      type:'radar',
+      data:{ labels:['Espacio','Zonas','Equipamiento','Pedagogía','Liderazgo','Formación','Financiamiento','Evaluación'],
+        datasets:[
+          { label:'Tu diseño', data:radarData, backgroundColor:'rgba(29,78,63,0.15)', borderColor:'#1D4E3F', borderWidth:2, pointBackgroundColor:'#1D4E3F', pointRadius:4 },
+          { label:'Mínimo recomendado', data:[60,40,40,60,50,40,60,40], backgroundColor:'rgba(155,35,53,0.05)', borderColor:'rgba(155,35,53,0.4)', borderWidth:1.5, borderDash:[4,3], pointRadius:0 }
+        ]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
+        scales:{ r:{ min:0, max:100, ticks:{ display:false }, grid:{ color:'rgba(0,0,0,0.07)' },
+                     angleLines:{ color:'rgba(0,0,0,0.07)' }, pointLabels:{ font:{ size:10 }, color:TC } } } }
+    });
+  }
+
+  // Plan de acción
+  const planes = [];
+  if (liderScore < 50) planes.push({ sem:'S1', color:'var(--red)', txt:'Identificar y formalizar líder maker con horas asignadas — sin esto, ninguna otra acción es sostenible.' });
+  else planes.push({ sem:'S1', color:'var(--accent)', txt:'Reunión de lanzamiento con ' + { nadie:'equipo directivo para definir responsable', docente:'docente líder', paradocente:'paradocente + docente facilitador', estudiante:'estudiante referente + docente facilitador' }[s.lider] + '.' });
+  if (s.espacio === 'computacion') planes.push({ sem:'S1–2', color:'var(--accent)', txt:'Redistribuir Sala de Computación por zonas. Reparar 3 armarios. Señalética de zonas.' });
+  planes.push({ sem:'S2', color:'var(--blue)', txt:'Taller de inducción maker para docentes — cultura maker, no herramientas. Foco en Hard Fun y metodología.' });
+  planes.push({ sem:'S3', color:'var(--accent)', txt:'Primer proyecto maker con ' + s.cursos + ' curso' + (s.cursos > 1 ? 's' : '') + ' piloto. Desafío de entrada: prototipo en cartón de un problema real del barrio.' });
+  if (finScore < 60) planes.push({ sem:'S3–4', color:'var(--amber)', txt:'Postular a SEP y PME con plan pedagógico documentado. El MakerSpace necesita respaldo presupuestario antes de la semana 6.' });
+  planes.push({ sem:'S5–6', color:'var(--purple)', txt:'Primera iteración de proyectos. Documentar con fotos y portfolio. Invitar a 1 apoderado a observar.' });
+  planes.push({ sem:'S7–8', color:'var(--accent)', txt:'Feria interna de proyectos maker. Audiencia: directivos + apoderados + pares. Medir autoestima y motivación.' });
+
+  const planEl = document.getElementById('sim-plan-accion');
+  if (planEl) planEl.innerHTML = planes.map(p => `
+    <div style="display:flex;gap:10px;align-items:flex-start;">
+      <div style="background:${p.color};color:white;border-radius:4px;padding:3px 7px;font-size:10px;font-weight:600;white-space:nowrap;flex-shrink:0;">${p.sem}</div>
+      <div style="font-size:12px;color:var(--text-2);line-height:1.55;">${p.txt}</div>
+    </div>`).join('');
+
+  // Resumen decisiones
+  const decs = [
+    { label:'Espacio', val: s.espacio === 'computacion' ? 'Sala de Computación' : 'Biblioteca' },
+    { label:'Zonas activas', val: s.zonas.map(z => ZONAS_CONFIG[z]?.label).join(', ') || 'Solo digital' },
+    { label:'Equipos nuevos', val: s.equipos.length ? s.equipos.map(id => EQUIPOS_CATALOG.find(e=>e.id===id)?.name).join(', ') : 'Ninguno — solo disponibles' },
+    { label:'Modelo pedagógico', val: { taller:'Taller con instrucción', abp:'ABP con producto maker', libre:'Exploración libre' }[s.pedagogia] },
+    { label:'Liderazgo', val: { nadie:'Sin definir', docente:'Docente con horas', paradocente:'Paradocente', estudiante:'Estudiante referente' }[s.lider] },
+    { label:'Presupuesto fase 1', val: fmtCLP(s._totalGasto || 0) },
+    { label:'Financiamiento', val: fmtCLP(s._ingresos || 0) },
+    { label:'Duración piloto', val: s.semanas + ' semanas · ' + s.cursos + ' cursos' },
+  ];
+  const decEl = document.getElementById('sim-resumen-decisiones');
+  if (decEl) decEl.innerHTML = decs.map(d => `
+    <div style="padding:8px 10px;background:var(--surface2);border-radius:var(--radius-sm);">
+      <div style="font-size:10px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px;">${d.label}</div>
+      <div style="font-size:12px;color:var(--text);font-weight:500;">${d.val}</div>
+    </div>`).join('');
+}
+
+// Inicialización del simulador cuando se activa el tab
+</script>
+<script>
+// Simulador init on tab switch
+(function() {
+  const origSwitch = switchTab;
+  window.switchTab = function(id, btn) {
+    origSwitch(id, btn);
+    if (id === 'simulador') {
+      setTimeout(() => {
+        simGoStep(1, document.querySelectorAll('.sim-step-btn')[0]);
+      }, 80);
+    }
+  };
+})();
 </script>
 
 </body>
