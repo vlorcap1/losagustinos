@@ -124,8 +124,10 @@
   .score-bar-fill { height: 100%; border-radius: 2px; }
 
   /* ── TABS ── */
-  .tab-nav { display: flex; gap: 4px; margin-bottom: 1.5rem; background: var(--surface); border-radius: var(--radius-sm); padding: 4px; box-shadow: var(--shadow); width: fit-content; }
-  .tab-btn { padding: 7px 18px; border-radius: 6px; border: none; background: transparent; color: var(--text-2); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
+  .tab-nav-wrap { overflow-x: auto; width: 100%; margin-bottom: 1.5rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tab-nav-wrap::-webkit-scrollbar { display: none; }
+  .tab-nav { display: flex; gap: 4px; background: var(--surface); border-radius: var(--radius-sm); padding: 4px; box-shadow: var(--shadow); width: max-content; min-width: 100%; }
+  .tab-btn { padding: 7px 18px; border-radius: 6px; border: none; background: transparent; color: var(--text-2); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s; white-space: nowrap; flex-shrink: 0; }
   .tab-btn:hover { color: var(--text); }
   .tab-btn.active { background: var(--accent); color: white; }
   .tab-panel { display: none; }
@@ -251,7 +253,7 @@
     .score-strip { grid-template-columns: 1fr 1fr; }
     .score-main { grid-column: 1/-1; }
     .g2, .g3, .g-1-1, .g-2-1 { grid-template-columns: 1fr; }
-    .tab-nav { overflow-x: auto; width: 100%; }
+    .tab-nav-wrap { margin-bottom: 1rem; }
     .main { padding: 1rem; }
     .header { padding: 1.5rem 1rem; }
   }
@@ -316,13 +318,18 @@
   </div>
 
   <!-- TABS -->
+  <div class="tab-nav-wrap">
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('diagnostico',this)">Diagnóstico</button>
     <button class="tab-btn" onclick="switchTab('constructivismo',this)">Marco constructivista</button>
-    <button class="tab-btn" onclick="switchTab('digital',this)">Creación digital</button>
+    <button class="tab-btn" onclick="switchTab('digital',this)">Espacio maker</button>
+    <button class="tab-btn" onclick="switchTab('territorial',this)">Capital territorial</button>
+    <button class="tab-btn" onclick="switchTab('actores',this)">Matriz de actores</button>
+    <button class="tab-btn" onclick="switchTab('sep',this)">SEP vs lógica maker</button>
     <button class="tab-btn" onclick="switchTab('focos',this)">Focos estratégicos</button>
     <button class="tab-btn" onclick="switchTab('espacios',this)">Evaluación de espacios</button>
     <button class="tab-btn" onclick="switchTab('ruta',this)">Ruta de implementación</button>
+  </div>
   </div>
 
   <!-- TAB: DIAGNÓSTICO -->
@@ -432,387 +439,925 @@
   <!-- TAB: CONSTRUCTIVISMO -->
   <div id="tab-constructivismo" class="tab-panel">
 
-    <div class="hl hl-green mb2" style="border-radius:var(--radius);padding:1.25rem 1.5rem;">
-      <div class="hl-title" style="font-size:13px;">Premisa central</div>
-      <div class="hl-text" style="font-size:15px;line-height:1.65;">El MakerSpace no es una sala de equipos. Es una <strong>arquitectura pedagógica</strong> donde el conocimiento se construye haciendo, errando y compartiendo — en directa coherencia con lo que el Colegio Los Agustinos ya declara en su PEI: metodologías activo-participativas, aprendizaje significativo y evaluación auténtica.</div>
+    <div style="background:var(--accent);color:white;border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-20px;bottom:-30px;font-family:'DM Serif Display',serif;font-size:9rem;opacity:0.06;line-height:1;pointer-events:none;">P</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">Análisis construccionista profundo</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:1.35rem;line-height:1.5;margin-bottom:10px;">"El problema no es enseñar mejor. Es crear condiciones donde el niño pueda aprender cosas que nosotros no sabríamos cómo enseñar."</div>
+      <div style="font-size:12px;opacity:0.65;">— Seymour Papert, <em>Mindstorms</em>, 1980</div>
     </div>
 
-    <div class="g3 mb2">
-      <div class="card">
-        <div class="card-title">Piaget — Aprendizaje por acción</div>
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:22px;color:var(--accent);margin-bottom:12px;">P</div>
-        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">El conocimiento no se transmite: se construye activamente. El estudiante es agente, no receptor. Cada prototipo físico o digital es un esquema externalizado que el alumno puede examinar, criticar y mejorar.</div>
-        <hr>
-        <div class="card-title">Conexión con el MakerSpace</div>
-        <div class="row"><span class="row-lbl">Ciclo maker</span><span class="row-val" style="font-size:11px;">Imaginar → Crear → Mejorar → Compartir</span></div>
-        <div class="row"><span class="row-lbl">Conflicto cognitivo</span><span class="row-val" style="font-size:11px;">El prototipo que no funciona</span></div>
-        <div class="row"><span class="row-lbl">Acomodación</span><span class="row-val" style="font-size:11px;">Iterar y rediseñar</span></div>
-        <div class="hl hl-green" style="margin-top:10px;">
-          <div class="hl-title">Aplicación en Los Agustinos</div>
-          <div class="hl-text">El colegio ya usa "evaluación de proceso". El MakerSpace extiende eso naturalmente: el proceso es el prototipo evolucionando, no el test al final.</div>
+
+    <!-- SECCIÓN 1: LA PREGUNTA PAPERTIANA -->
+    <div class="card mb2">
+      <div class="card-title">La pregunta que Papert haría sobre Los Agustinos</div>
+      <div style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:16px;">Papert no preguntaría "¿qué equipos comprar?" ni "¿qué metodología aplicar?". Preguntaría algo más incómodo: <strong style="color:var(--text);">¿por qué un estudiante del sector Colín debería querer aprender lo que el colegio quiere enseñarle?</strong> Y luego: ¿qué objetos, actividades o contextos podrían hacer que ese estudiante <em>necesite</em> el conocimiento para hacer algo que ya desea?</div>
+      <div class="g3">
+        <div class="hl hl-red" style="margin:0;border-radius:var(--radius-sm);">
+          <div class="hl-title">El problema real que el diagnóstico revela</div>
+          <div class="hl-text">P34 dice que la respuesta de los estudiantes ante actividades con autonomía "depende mucho del curso o nivel". Papert leería esto como evidencia de que el sistema ya ha dañado la curiosidad natural en algunos grupos — y que el MakerSpace debe ser la reparación, no otro programa más.</div>
         </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Vygotsky — Zona de Desarrollo Próximo</div>
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:22px;color:var(--blue);margin-bottom:12px;">V</div>
-        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">El aprendizaje ocurre en la brecha entre lo que el estudiante puede hacer solo y lo que puede hacer con apoyo. El MakerSpace crea andamiaje entre pares y entre docente-estudiante de modo natural y visible.</div>
-        <hr>
-        <div class="card-title">Dinámicas ZDP en el espacio maker</div>
-        <div class="row"><span class="row-lbl">Pares como andamiaje</span><span class="row-val" style="font-size:11px;">Estudiante que ya sabe enseña</span></div>
-        <div class="row"><span class="row-lbl">Docente como facilitador</span><span class="row-val" style="font-size:11px;">No experto, sino guía</span></div>
-        <div class="row"><span class="row-lbl">Herramienta como extensión cognitiva</span><span class="row-val" style="font-size:11px;">El software amplía lo posible</span></div>
-        <div class="hl hl-blue" style="margin-top:10px;">
-          <div class="hl-title">Relevancia para Los Agustinos</div>
-          <div class="hl-text">Con baja competencia docente en metodologías digitales, los propios estudiantes pueden ser el andamiaje inicial. Esto no es un déficit: es una pedagogía que el MakerSpace habilita.</div>
+        <div class="hl hl-amber" style="margin:0;border-radius:var(--radius-sm);">
+          <div class="hl-title">La contradicción central del PEI</div>
+          <div class="hl-text">El PEI declara "metodologías activo-participativas" (OE2) y "aprendizaje significativo", pero P31 confirma que la mayoría de docentes prefiere metodologías tradicionales. Papert llamaría esto <em>QWERTY pedagógico</em>: una disposición que ya no sirve pero que nadie se atreve a cambiar.</div>
         </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Papert — Construccionismo</div>
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:22px;color:var(--purple);margin-bottom:12px;">S</div>
-        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">Extensión de Piaget: aprendemos mejor cuando construimos algo <em>compartible</em>. Un podcast, un video, un objeto físico, un juego — son "objetos para pensar con" que otros pueden ver, usar y criticar.</div>
-        <hr>
-        <div class="card-title">Los objetos públicos de aprendizaje</div>
-        <div class="row"><span class="row-lbl">Podcast escolar</span><span class="row-val" style="font-size:11px;">Conocimiento audible</span></div>
-        <div class="row"><span class="row-lbl">Video documental</span><span class="row-val" style="font-size:11px;">Historia que se cuenta</span></div>
-        <div class="row"><span class="row-lbl">Maqueta interactiva</span><span class="row-val" style="font-size:11px;">Ciencia que se toca</span></div>
-        <div class="row"><span class="row-lbl">Prototipo de emprendimiento</span><span class="row-val" style="font-size:11px;">Idea que se defiende</span></div>
-        <div class="hl hl-purple" style="margin-top:10px;">
-          <div class="hl-title">Conexión con la visión del colegio</div>
-          <div class="hl-text">"Saliendo de lo tradicional" — lo que el colegio declaró como visión de éxito es exactamente la promesa del construccionismo: hacer visible el aprendizaje.</div>
+        <div class="hl hl-blue" style="margin:0;border-radius:var(--radius-sm);">
+          <div class="hl-title">La oportunidad que el diagnóstico no ve</div>
+          <div class="hl-text">P26 dice que los estudiantes construyen prototipos físicos <em>solo fuera del colegio</em>. Para Papert, esto es lo más revelador del diagnóstico: los estudiantes ya son makers fuera del colegio. El MakerSpace debe conectarse con esa vida, no ignorarla.</div>
         </div>
       </div>
     </div>
 
+    <!-- SECCIÓN 2: CONSTRUCCIONISMO APLICADO A DATOS REALES -->
     <div class="g-2-1 mb2">
       <div class="card">
-        <div class="card-title">Alineación entre pedagogías maker y el PEI del colegio</div>
-        <div style="position:relative;width:100%;height:280px;">
-          <canvas id="peiAlignChart"></canvas>
-        </div>
-        <div class="legend" style="margin-top:10px;">
-          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Presencia actual en PEI</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#4A2D7A"></span>Potencial con MakerSpace</span>
+        <div class="card-title">Construccionismo — lectura cruzada con cada respuesta del diagnóstico</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:14px;">Papert argumentaría que cada respuesta del diagnóstico tiene una lectura construccionista específica. No son datos neutros.</div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-light);border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">P4 — "Trabajo por proyectos con evaluación de proceso"</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Este es el dato más valioso del diagnóstico. El colegio ya opera, al menos en intención, desde una epistemología compatible con el construccionismo. El MakerSpace no llega a contradecir la pedagogía existente — llega a darle materiales concretos. La brecha está en que el "proyecto" suele terminar en una presentación en PowerPoint, no en un objeto que funciona.</div>
+          </div>
+          <div style="border-left:3px solid var(--red);padding:10px 14px;background:var(--red-light);border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;">P32 — "No hay nadie identificado aún" como líder maker</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Papert diría que buscar un "líder maker" entre los docentes actuales es el planteamiento equivocado. En el MIT Media Lab, el conocimiento circulaba horizontalmente. La pregunta correcta es: ¿qué estudiante de 3° o 4° medio ya está haciendo cosas interesantes fuera del colegio? Ese estudiante es el primer líder maker. Los docentes vienen después.</div>
+          </div>
+          <div style="border-left:3px solid var(--amber);padding:10px 14px;background:var(--amber-light);border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+            <div style="font-size:11px;font-weight:600;color:var(--amber);margin-bottom:4px;">P37 — "Miedo a que los estudiantes dañen los equipos"</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Este miedo es la señal más clara de que el modelo mental dominante sigue siendo el del "laboratorio de computación" — donde los equipos son sagrados y los estudiantes son riesgos. Papert lo llamaría <em>epistemología del objeto intocable</em>. Un equipo dañado en un MakerSpace es un experimento que llegó demasiado lejos, no una catástrofe. La política de materiales debe reflejar eso.</div>
+          </div>
+          <div style="border-left:3px solid var(--blue);padding:10px 14px;background:var(--blue-light);border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+            <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px;">P10 — "Se sentirían más importantes, con mejor autoestima"</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Esta es la respuesta más construccionista del diagnóstico, aunque el colegio no lo sabe. Papert sostenía que la identidad del aprendiz es inseparable del aprendizaje. Un estudiante que construye algo real, que funciona y que otros pueden usar, no solo aprende contenido — reconstruye su relación con el conocimiento y consigo mismo. Esto es exactamente lo que el colegio está pidiendo.</div>
+          </div>
+          <div style="border-left:3px solid var(--purple);padding:10px 14px;background:var(--purple-light);border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+            <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:4px;">P35 — "Planificación sigue siendo por asignatura"</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Para Papert, la balcanización del conocimiento en asignaturas es el problema estructural de la escuela moderna. Nadie en la vida real "hace matemáticas" por 45 minutos y luego "hace historia". El MakerSpace es el único espacio donde esa división desaparece naturalmente — porque construir un sensor de temperatura requiere física, matemáticas, código y comunicación al mismo tiempo.</div>
+          </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title">Modelo pedagógico recomendado</div>
-        <div class="hl hl-purple" style="margin-bottom:10px;">
-          <div class="hl-title">ABP + Construccionismo digital</div>
-          <div class="hl-text">Aprendizaje Basado en Proyectos con productos digitales o físicos compartibles como evidencia central de aprendizaje. Reemplaza la evaluación de contenidos por la evaluación de competencias en acción.</div>
-        </div>
-        <div class="card-title" style="margin-top:12px;">Ciclo pedagógico maker</div>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">1</div>
-            <div><span style="font-weight:500;font-size:13px;">Desafío real</span><span style="color:var(--text-3);font-size:12px;"> — problema del contexto local o del colegio</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue-light);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">2</div>
-            <div><span style="font-weight:500;font-size:13px;">Investigar y definir</span><span style="color:var(--text-3);font-size:12px;"> — quién sufre el problema y por qué</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-light);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">3</div>
-            <div><span style="font-weight:500;font-size:13px;">Crear y prototipar</span><span style="color:var(--text-3);font-size:12px;"> — con herramientas digitales y materiales</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--purple-light);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">4</div>
-            <div><span style="font-weight:500;font-size:13px;">Compartir y recibir feedback</span><span style="color:var(--text-3);font-size:12px;"> — audiencia real, no solo el docente</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">5</div>
-            <div><span style="font-weight:500;font-size:13px;">Iterar</span><span style="color:var(--text-3);font-size:12px;"> — mejorar a partir de evidencia real</span></div>
+
+      <div>
+        <div class="card mb">
+          <div class="card-title">El concepto de "objeto para pensar con"</div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:12px;">Papert tomó de Lévi-Strauss la idea de los <em>objets-à-penser-avec</em> — objetos que no solo se usan sino que permiten pensar <em>a través</em> de ellos. En el MakerSpace, cada prototipo que los estudiantes crean es un objeto para pensar con.</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:6px;"></div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.6;"><strong style="color:var(--text);">El circuito LED que no enciende</strong> es un objeto para pensar sobre electricidad — más poderoso que cualquier explicación del docente.</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:6px;"></div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.6;"><strong style="color:var(--text);">El modelo 3D que no imprime bien</strong> es un objeto para pensar sobre geometría espacial — la abstracción matemática se vuelve concreta.</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:6px;"></div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.6;"><strong style="color:var(--text);">El código que arroja un error</strong> es un objeto para pensar sobre lógica — el computador no miente, obliga al estudiante a razonar.</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:6px;"></div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.6;"><strong style="color:var(--text);">El producto que nadie quiso usar</strong> es un objeto para pensar sobre diseño centrado en el usuario — la empatía se aprende en la fricción real.</div>
+            </div>
           </div>
         </div>
-        <div class="hl hl-amber" style="margin-top:14px;">
-          <div class="hl-title">Conexión con objetivo estratégico PEI</div>
-          <div class="hl-text">El OE2 del PEI dice literalmente "metodologías activo-participativas que permitan aprendizaje más significativo". El ciclo maker es la implementación concreta de ese objetivo.</div>
+        <div class="card">
+          <div class="card-title">Micromundos para Los Agustinos</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:10px;">Papert desarrolló el concepto de <em>micromundo</em>: un entorno simplificado donde las ideas abstractas se pueden explorar concretamente. Cada actividad maker es un micromundo.</div>
+          <div class="row"><span class="row-lbl">Turtle (Logo)</span><span style="font-size:11px;color:var(--text-3);">→ Scratch, p5.js para Los Agustinos</span></div>
+          <div class="row"><span class="row-lbl">Física con Logo</span><span style="font-size:11px;color:var(--text-3);">→ Tinkercad Circuits</span></div>
+          <div class="row"><span class="row-lbl">Construcción de robots</span><span style="font-size:11px;color:var(--text-3);">→ Arduino + materiales reciclados</span></div>
+          <div class="row"><span class="row-lbl">Matemáticas con Logo</span><span style="font-size:11px;color:var(--text-3);">→ GeoGebra + modelado 3D</span></div>
+          <div class="hl hl-purple" style="margin-top:10px;">
+            <div class="hl-title">El principio del micromundo aplicado</div>
+            <div class="hl-text">El MakerSpace entero es un micromundo: un espacio donde las reglas son distintas — el error está permitido, el tiempo es flexible, el producto es tuyo. No una excepción al colegio, sino una alternativa curricular real.</div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- SECCIÓN 3: GRÁFICO CRUCES -->
     <div class="card mb2">
-      <div class="card-title">Teorías de aprendizaje — comparativa con práctica tradicional vs maker</div>
+      <div class="card-title">Alineación construccionista — PEI declarado vs práctica real vs potencial maker</div>
+      <div style="position:relative;width:100%;height:300px;">
+        <canvas id="peiAlignChart"></canvas>
+      </div>
+      <div class="legend" style="margin-top:10px;">
+        <span class="legend-item"><span class="legend-sq" style="background:#9B2335"></span>Práctica real actual (estimada)</span>
+        <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Intención declarada en PEI</span>
+        <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Potencial con MakerSpace construccionista</span>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 4: LA TRAMPA DEL INSTRUCTOR -->
+    <div class="g2 mb2">
+      <div class="card">
+        <div class="card-title">La trampa del "instructor maker" — por qué Papert diría que no</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:14px;">El diagnóstico (P32) revela que no hay docente líder identificado. La respuesta instintiva es <em>buscar uno o capacitar a uno</em>. Papert argumentaría que eso reproduce exactamente el modelo que el MakerSpace intenta superar.</div>
+        <div class="hl hl-red" style="margin-bottom:10px;">
+          <div class="hl-title">El modelo que hay que evitar</div>
+          <div class="hl-text">Un docente que "sabe hacer" y enseña a los estudiantes a hacer lo mismo. Esto convierte el MakerSpace en otra clase — con instructor al frente, estudiantes copiando el procedimiento, evaluación por fidelidad a la instrucción. Es el modelo de taller vocacional, no de construccionismo.</div>
+        </div>
+        <div class="hl hl-green" style="margin-bottom:10px;">
+          <div class="hl-title">El modelo que Papert propone</div>
+          <div class="hl-text">Un adulto que no sabe qué van a hacer los estudiantes, pero sabe hacer buenas preguntas. "¿Qué pasaría si…?", "¿Cómo podrías comprobar eso?", "¿A quién le serviría esto?" — la ignorancia estratégica del facilitador es más poderosa que su expertise técnico.</div>
+        </div>
+        <div class="hl hl-blue">
+          <div class="hl-title">Implicación práctica para Los Agustinos</div>
+          <div class="hl-text">El paradocente o auxiliar capacitado (P19) es en realidad el perfil correcto, si se le entrena en cultura maker, no en habilidades técnicas específicas. Su rol es mantener el espacio funcionando, conocer los recursos disponibles y preguntar bien — no demostrar cómo hacer.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pensamiento epistemológico — cómo cambia lo que se "sabe"</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:14px;">Papert distinguía entre <em>saber sobre</em> algo y <em>saber hacer</em> con algo. La escuela tradicional acumula el primero. El construccionismo construye el segundo.</div>
+        <div style="overflow-x:auto;">
+          <table class="compare-table" style="font-size:12px;">
+            <thead>
+              <tr>
+                <th>Situación en Los Agustinos</th>
+                <th>Saber sobre (escuela)</th>
+                <th class="col-winner">Saber hacer con (MakerSpace)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Electricidad (Física)</td><td>Ley de Ohm en el cuaderno</td><td class="col-winner">Circuito que prende y apaga algo real</td></tr>
+              <tr><td>Geometría (Matemáticas)</td><td>Área y volumen en ejercicios</td><td class="col-winner">Modelo 3D que hay que calcular para que quepa</td></tr>
+              <tr><td>Comunicación (Lengua)</td><td>Tipos de texto y análisis</td><td class="col-winner">Guion de podcast que alguien va a escuchar</td></tr>
+              <tr><td>Ecosistemas (Ciencias)</td><td>Cadena alimentaria en el libro</td><td class="col-winner">Sensor que mide la temperatura del patio</td></tr>
+              <tr><td>Historia local</td><td>Fechas y nombres en prueba</td><td class="col-winner">Video documental con entrevistas al barrio</td></tr>
+              <tr><td>Ciudadanía</td><td>Derechos y deberes teóricos</td><td class="col-winner">Campaña digital sobre un problema real del colegio</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 5: HARD FUN Y VULNERABILIDAD -->
+    <div class="card mb2">
+      <div class="card-title">Hard Fun — el concepto más urgente para el contexto de Los Agustinos</div>
+      <div class="g-2-1">
+        <div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:14px;">Papert acuñó el concepto de <em>Hard Fun</em> para describir algo que observó repetidamente: los niños que parecen más "desmotivados" en clase eligen voluntariamente actividades extremadamente difíciles fuera de ella — videojuegos complejos, deportes exigentes, música con horas de práctica. La dificultad no los detiene. Lo que los detiene es la <strong style="color:var(--text);">dificultad sin propósito propio</strong>.</div>
+          <div class="hl hl-red" style="margin-bottom:10px;">
+            <div class="hl-title">Lectura directa del diagnóstico de Los Agustinos</div>
+            <div class="hl-text">P34 dice que la respuesta de los estudiantes ante autonomía "depende mucho del curso". Esto no es un problema de motivación estudiantil — es un problema de diseño de la experiencia. Los cursos donde funciona ya tienen condiciones de Hard Fun. Los que no, están operando en modo "dificultad sin propósito".</div>
+          </div>
+          <div class="hl hl-green" style="margin-bottom:10px;">
+            <div class="hl-title">Lo que Hard Fun requiere en el diseño del espacio</div>
+            <div class="hl-text">1. El desafío debe ser genuinamente difícil — no simulado. 2. El estudiante debe elegir en qué forma responder al desafío. 3. Debe existir la posibilidad real de fracasar — y de intentarlo de nuevo. 4. El resultado debe importarle a alguien más que al docente.</div>
+          </div>
+          <div class="hl hl-purple">
+            <div class="hl-title">La implicación para los "armarios sin llave" (P17)</div>
+            <div class="hl-text">El diagnóstico señala que los armarios en la sala de computación no tienen seguridad y los estudiantes pueden sacar materiales fácilmente. El instinto institucional es ver esto como problema. La lectura construccionista es opuesta: si los materiales son accesibles, los estudiantes los van a usar fuera de las horas formales. Eso es exactamente lo que un MakerSpace quiere.</div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="box-shadow:none;border:0.5px solid var(--border);">
+            <div class="card-title">Indicadores de Hard Fun en el aula</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              <div style="padding:10px;background:var(--surface2);border-radius:var(--radius-sm);">
+                <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;">El estudiante no escucha el timbre</div>
+                <div style="font-size:11px;color:var(--text-3);">Señal más confiable de que el aprendizaje ocurre</div>
+              </div>
+              <div style="padding:10px;background:var(--surface2);border-radius:var(--radius-sm);">
+                <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;">El error genera conversación, no silencio</div>
+                <div style="font-size:11px;color:var(--text-3);">"¿Cómo lo arreglamos?" en lugar de "¿cuándo me califican?"</div>
+              </div>
+              <div style="padding:10px;background:var(--surface2);border-radius:var(--radius-sm);">
+                <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;">Estudiantes enseñan a estudiantes</div>
+                <div style="font-size:11px;color:var(--text-3);">El que sabe algo va donde el que no sabe — sin que nadie se lo pida</div>
+              </div>
+              <div style="padding:10px;background:var(--surface2);border-radius:var(--radius-sm);">
+                <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;">El proyecto continúa fuera del horario</div>
+                <div style="font-size:11px;color:var(--text-3);">WhatsApp del grupo activo en la noche con ideas nuevas</div>
+              </div>
+              <div style="padding:10px;background:var(--surface2);border-radius:var(--radius-sm);">
+                <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;">El producto es mostrado a alguien fuera del colegio</div>
+                <div style="font-size:11px;color:var(--text-3);">"Le mostré a mi mamá / a mi vecino / lo publiqué"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 6: COMPARATIVA PARADIGMAS -->
+    <div class="card mb2">
+      <div class="card-title">Dos paradigmas pedagógicos frente a cada hallazgo del diagnóstico</div>
+      <div style="font-size:12px;color:var(--text-3);margin-bottom:14px;">Cómo respondería el paradigma instruccional vs el construccionista a cada situación encontrada en Los Agustinos</div>
       <div style="overflow-x:auto;">
         <table class="compare-table">
           <thead>
             <tr>
-              <th>Dimensión</th>
-              <th>Práctica tradicional actual</th>
-              <th class="col-winner">Con MakerSpace construccionista</th>
-              <th>Marco teórico</th>
+              <th>Hallazgo diagnóstico</th>
+              <th>Respuesta instruccional</th>
+              <th class="col-winner">Respuesta construccionista (Papert)</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Rol del estudiante</td><td>Receptor de contenidos</td><td class="col-winner">Constructor de artefactos y significados</td><td>Papert, Piaget</td></tr>
-            <tr><td>Rol del docente</td><td>Transmisor de información</td><td class="col-winner">Facilitador, diseñador de experiencias</td><td>Vygotsky</td></tr>
-            <tr><td>Evidencia de aprendizaje</td><td>Prueba escrita, nota</td><td class="col-winner">Producto público: video, podcast, prototipo</td><td>Construccionismo</td></tr>
-            <tr><td>Error</td><td>Penalizado (baja la nota)</td><td class="col-winner">Fuente de datos para iterar</td><td>Design Thinking, ABP</td></tr>
-            <tr><td>Colaboración</td><td>Accesoria ("trabajo grupal")</td><td class="col-winner">Central: el producto requiere múltiples habilidades</td><td>Vygotsky ZDP</td></tr>
-            <tr><td>Conexión con el mundo real</td><td>Baja (ejercicios abstractos)</td><td class="col-winner">Alta: problemas del barrio, del colegio, del Maule</td><td>Ausubel — aprendizaje significativo</td></tr>
-            <tr><td>Motivación</td><td>Extrínseca (nota, no reprobar)</td><td class="col-winner">Intrínseca (el objeto existe, es real, me representa)</td><td>Deci & Ryan — autodeterminación</td></tr>
-            <tr><td>Interdisciplina</td><td>Por asignatura, desconectada</td><td class="col-winner">Natural: un podcast requiere Lengua + Ciencias + Arte</td><td>Currículum integrado</td></tr>
+            <tr>
+              <td>Sin docente líder maker (P32)</td>
+              <td>Capacitar a un docente en la metodología y nombrarlo coordinador</td>
+              <td class="col-winner">Identificar al estudiante maker ya existente y hacerlo referente. El docente aprende junto, no antes</td>
+            </tr>
+            <tr>
+              <td>Docentes con baja competencia digital (P31)</td>
+              <td>Curso de capacitación técnica en herramientas digitales</td>
+              <td class="col-winner">Poner a los docentes en posición de aprendiz en el espacio maker. La experiencia de no saber — y resolver — es la formación</td>
+            </tr>
+            <tr>
+              <td>Planificación por asignatura (P35)</td>
+              <td>Crear horas de "taller maker" separadas del currículum</td>
+              <td class="col-winner">Diseñar un proyecto maker que requiera contenido de 3 asignaturas. La interdisciplina emerge del problema, no de un acuerdo docente</td>
+            </tr>
+            <tr>
+              <td>Espacio de formato fijo (P13)</td>
+              <td>Pedir presupuesto para mobiliario modular nuevo</td>
+              <td class="col-winner">Rediseñar el espacio con los estudiantes como primer proyecto maker. El proceso de rediseño ya es aprendizaje</td>
+            </tr>
+            <tr>
+              <td>Sin conexión con programas externos (P6)</td>
+              <td>Postular a fondos y programas institucionales</td>
+              <td class="col-winner">Conectar los proyectos de los estudiantes con problemas reales de la comunidad. Los fondos vienen solos cuando hay productos reales que mostrar</td>
+            </tr>
+            <tr>
+              <td>Miedo al daño de equipos (P37)</td>
+              <td>Crear reglamento de uso y protocolo de responsabilidades</td>
+              <td class="col-winner">Establecer una política de "presupuesto de daños permitidos" — una cantidad fija destinada a aprender haciendo. Cambiar el marco mental: el daño es costo de producción, no negligencia</td>
+            </tr>
+            <tr>
+              <td>Estudiantes construyen fuera del colegio (P26)</td>
+              <td>Implementar un espacio interno para traer eso al colegio</td>
+              <td class="col-winner">Primero visitar y documentar lo que los estudiantes ya hacen afuera. El MakerSpace construye <em>desde</em> esa práctica, no sobre ella</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
 
+    <!-- SECCIÓN 7: EVALUACIÓN AUTÉNTICA -->
     <div class="g2">
       <div class="card">
-        <div class="card-title">Aprendizaje Socioemocional (SEL) desde el MakerSpace</div>
-        <div style="font-size:13px;color:var(--text-2);margin-bottom:12px;line-height:1.65;">El colegio declaró que el éxito del MakerSpace se mediría en autoestima y sentido de importancia personal — no en indicadores técnicos. Esto tiene respaldo teórico sólido en la literatura SEL.</div>
-        <div class="row"><span class="row-lbl">Competencia personal</span><span class="row-val" style="font-size:11px;">"Yo puedo hacer cosas reales"</span></div>
-        <div class="row"><span class="row-lbl">Autoeficacia (Bandura)</span><span class="row-val" style="font-size:11px;">Creer que soy capaz de completar tareas</span></div>
-        <div class="row"><span class="row-lbl">Agencia</span><span class="row-val" style="font-size:11px;">Tener control sobre mi proceso de aprendizaje</span></div>
-        <div class="row"><span class="row-lbl">Identidad creativa</span><span class="row-val" style="font-size:11px;">"Soy alguien que crea, no solo recibe"</span></div>
-        <div class="hl hl-green" style="margin-top:12px;">
-          <div class="hl-title">Relevancia crítica en contexto de alta vulnerabilidad</div>
-          <div class="hl-text">Investigaciones de Margolis & McCabe (2006) y la literatura sobre growth mindset de Dweck muestran que estudiantes en contextos de alta vulnerabilidad se benefician desproporcionadamente de espacios donde pueden producir algo valioso y compartirlo. El producto físico o digital es evidencia tangible de capacidad — algo que ninguna nota puede reemplazar.</div>
+        <div class="card-title">Construccionismo y autoestima — el cruce más importante</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:14px;">La visión de éxito del colegio (P10) habla de autoestima, importancia personal y contexto de alta vulnerabilidad. Esto no es un objetivo "blando" paralelo al aprendizaje — para Papert, es el aprendizaje mismo.</div>
+        <div class="hl hl-purple" style="margin-bottom:10px;">
+          <div class="hl-title">Identidad epistémica</div>
+          <div class="hl-text">Papert sostenía que la escuela no solo enseña contenidos — enseña una relación con el conocimiento. Un estudiante que reprueba matemáticas repetidamente no solo "no sabe matemáticas": aprendió que él no es alguien que puede saber matemáticas. El MakerSpace interrumpe ese aprendizaje negativo.</div>
+        </div>
+        <div class="hl hl-green" style="margin-bottom:10px;">
+          <div class="hl-title">El objeto como prueba de capacidad</div>
+          <div class="hl-text">Cuando un estudiante en contexto de alta vulnerabilidad produce algo que funciona — una alarma con Arduino, una infografía que alguien comparte, un modelo impreso en 3D — ese objeto es evidencia concreta de capacidad. No una nota dada por un adulto. Evidencia tangible, que persiste, que puede mostrarle a su familia.</div>
+        </div>
+        <div class="hl hl-blue">
+          <div class="hl-title">La investigación detrás del cruce</div>
+          <div class="hl-text">Kafai & Burke (2014) en "Connected Code" documentaron que en contextos de alta vulnerabilidad, la programación creativa (construir juegos, animaciones, historias interactivas) produce mejoras medibles en autoeficacia y autoestima académica. No porque se enseñe autoestima, sino porque el objeto producido lo demuestra.</div>
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Modelo de evaluación auténtica recomendado</div>
-        <div style="font-size:13px;color:var(--text-2);margin-bottom:12px;line-height:1.65;">Alineado con el OE3 del PEI: "incorporar evaluación formativa y de proceso". El MakerSpace permite una evaluación que el sistema tradicional no puede hacer.</div>
-        <div class="hl hl-blue" style="margin-bottom:8px;">
-          <div class="hl-title">Rúbrica maker (en lugar de nota)</div>
-          <div class="hl-text">¿El producto responde al problema definido? ¿Se iteró al menos 2 veces? ¿Puede explicarlo a alguien que no participó? ¿Qué aprendió el equipo sobre el proceso?</div>
-        </div>
-        <div class="hl hl-purple" style="margin-bottom:8px;">
-          <div class="hl-title">Portfolio de proceso</div>
-          <div class="hl-text">Registro de versiones del prototipo, diario de reflexión, capturas de pantalla del proceso creativo. Reemplaza la prueba por evidencia longitudinal.</div>
-        </div>
-        <div class="hl hl-amber">
-          <div class="hl-title">Presentación a audiencia real</div>
-          <div class="hl-text">Feria interna, video publicado, podcast emitido en la radio del colegio. La audiencia real es el evaluador más poderoso que existe.</div>
+        <div class="card-title">Sistema de evaluación construccionista para Los Agustinos</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:14px;">El OE3 del PEI pide "evaluación formativa y de proceso". El construccionismo ofrece el sistema más completo para hacer eso real — no como complemento a la nota, sino como sustituto para el espacio maker.</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--accent-light);color:var(--accent);font-family:'DM Serif Display',serif;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">El objeto habla</div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.55;">¿El prototipo hace lo que debía hacer? ¿Responde al problema inicial? La primera evaluación la hace el objeto mismo — no el docente.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-family:'DM Serif Display',serif;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">El proceso es la evidencia</div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.55;">Portfolio con versiones 1, 2 y 3 del prototipo. Las decisiones de cambio entre versiones son la evidencia de aprendizaje más rica que existe.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--amber-light);color:var(--amber);font-family:'DM Serif Display',serif;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">La audiencia evalúa</div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.55;">Presentación a pares, a la comunidad o publicación digital. El feedback de audiencia real es más formativo que cualquier rúbrica docente.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--purple-light);color:var(--purple);font-family:'DM Serif Display',serif;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">La reflexión cierra el ciclo</div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.55;">"¿Qué no sabías al principio que ahora sí sabes?" — esta pregunta, respondida honestamente, vale más que cualquier prueba de contenido.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TAB: CREACIÓN DIGITAL -->
+  <!-- TAB: ESPACIO MAKER -->
   <div id="tab-digital" class="tab-panel">
 
-    <div class="hl hl-blue mb2" style="border-radius:var(--radius);padding:1.25rem 1.5rem;">
-      <div class="hl-title" style="font-size:13px;">Marco de referencia</div>
-      <div class="hl-text" style="font-size:15px;line-height:1.65;">La creación digital es la expresión contemporánea del construccionismo. En Los Agustinos existe la infraestructura base (42 equipos, audiovisual, LMS activo). La pregunta no es <em>si se puede</em> — es <em>qué producir primero</em> para instalar la cultura maker con los recursos existentes.</div>
+    <div style="background:var(--accent);color:white;border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-10px;bottom:-20px;font-size:7rem;opacity:0.07;line-height:1;">⚙</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">Filosofía del espacio</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;line-height:1.5;margin-bottom:10px;">"El MakerSpace no es un laboratorio de computación mejorado. Es el primer espacio del colegio donde las manos, la mente y los materiales trabajan juntos con un propósito propio."</div>
+      <div style="font-size:12px;opacity:0.65;">— Principio de diseño para Los Agustinos</div>
+    </div>
+
+    <div class="card mb2">
+      <div class="card-title">El continuo maker — de lo digital a lo físico</div>
+      <div style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;">El error más común al diseñar MakerSpaces escolares es pensarlos como sinónimo de "computadores y software". El movimiento maker nació con <strong style="color:var(--text);">las manos en la materia</strong> — madera, electrónica, tela, cartón, metal. Lo digital es una herramienta dentro del espacio, no el espacio mismo. En Los Agustinos, con 42 equipos ya disponibles, el valor diferencial del MakerSpace está precisamente en lo que aún no existe: el prototipado físico.</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:0.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
+        <div style="padding:14px 10px;text-align:center;background:var(--accent-light);border-right:0.5px solid var(--border);">
+          <div style="font-size:18px;margin-bottom:6px;">✏️</div>
+          <div style="font-size:11px;font-weight:600;color:var(--accent);">Diseño</div>
+          <div style="font-size:10px;color:var(--text-3);margin-top:3px;">Boceto, CAD, Tinkercad</div>
+        </div>
+        <div style="padding:14px 10px;text-align:center;background:#F0EBF9;border-right:0.5px solid var(--border);">
+          <div style="font-size:18px;margin-bottom:6px;">🔧</div>
+          <div style="font-size:11px;font-weight:600;color:var(--purple);">Prototipado</div>
+          <div style="font-size:10px;color:var(--text-3);margin-top:3px;">Cartón, madera, PLA</div>
+        </div>
+        <div style="padding:14px 10px;text-align:center;background:var(--blue-light);border-right:0.5px solid var(--border);">
+          <div style="font-size:18px;margin-bottom:6px;">⚡</div>
+          <div style="font-size:11px;font-weight:600;color:var(--blue);">Electrónica</div>
+          <div style="font-size:10px;color:var(--text-3);margin-top:3px;">Arduino, sensores, LEDs</div>
+        </div>
+        <div style="padding:14px 10px;text-align:center;background:var(--amber-light);border-right:0.5px solid var(--border);">
+          <div style="font-size:18px;margin-bottom:6px;">💻</div>
+          <div style="font-size:11px;font-weight:600;color:var(--amber);">Código</div>
+          <div style="font-size:10px;color:var(--text-3);margin-top:3px;">Scratch, MakeCode, C++</div>
+        </div>
+        <div style="padding:14px 10px;text-align:center;background:var(--red-light);">
+          <div style="font-size:18px;margin-bottom:6px;">🌐</div>
+          <div style="font-size:11px;font-weight:600;color:var(--red);">Compartir</div>
+          <div style="font-size:10px;color:var(--text-3);margin-top:3px;">Feria, video, publicación</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:8px;text-align:center;">El ciclo completo ocurre en el espacio — la computación es una etapa, no el destino</div>
     </div>
 
     <div class="g3 mb2">
       <div class="card">
-        <div style="font-size:24px;margin-bottom:8px;">🎙</div>
-        <div class="card-title">Producción de audio y podcast</div>
-        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">El podcast escolar es la línea de entrada más accesible: requiere solo un micrófono (ya disponible), cualquier computador, y Audacity (gratuito). Activa Lengua, Historia, Ciencias e incluso Inglés de forma natural.</div>
-        <div class="row"><span class="row-lbl">Herramienta principal</span><span class="row-val" style="font-size:11px;">Audacity (libre)</span></div>
-        <div class="row"><span class="row-lbl">Plataforma distribución</span><span class="row-val" style="font-size:11px;">Spotify for Podcasters</span></div>
-        <div class="row"><span class="row-lbl">Equipos requeridos</span><span class="row-val" style="font-size:11px;">1 computador + 1 micrófono</span></div>
-        <div class="row"><span class="row-lbl">Curva de aprendizaje</span><span class="badge b-green">Baja</span></div>
-        <div class="row"><span class="row-lbl">Producto compartible</span><span class="badge b-green">Episodio público</span></div>
-        <div class="hl hl-green" style="margin-top:10px;">
-          <div class="hl-title">Proyecto piloto sugerido</div>
-          <div class="hl-text">Radio Agustinos: historias del barrio sur-poniente de Talca. Conexión directa con la misión de "formación ciudadana y responsabilidad social".</div>
+        <div class="card-title">Zona de prototipado físico</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:12px;">El núcleo del espacio maker que el colegio no tiene. Requiere la menor inversión para el mayor cambio cultural: trabajar con las manos es radicalmente distinto a trabajar con el teclado.</div>
+        <div class="row"><span class="row-lbl">Mesa de trabajo central</span><span class="badge b-amber">Por adquirir</span></div>
+        <div class="row"><span class="row-lbl">Materiales base</span><span class="row-val" style="font-size:11px;">Cartón, madera balsa, PVC, adhesivos</span></div>
+        <div class="row"><span class="row-lbl">Herramientas manuales</span><span class="row-val" style="font-size:11px;">Sierra, taladro, bisturí, regla metálica</span></div>
+        <div class="row"><span class="row-lbl">Impresora 3D FDM</span><span class="badge b-amber">Fase 2</span></div>
+        <div class="row"><span class="row-lbl">Costo estimado fase 1</span><span class="row-val" style="font-size:11px;">~$150.000–250.000 CLP</span></div>
+        <div class="hl hl-amber" style="margin-top:10px;">
+          <div class="hl-title">Principio de diseño</div>
+          <div class="hl-text">Empezar con materiales que se puedan dañar sin drama. El cartón es el mejor maestro del espacio maker: barato, versátil, y el error no cuesta nada.</div>
         </div>
       </div>
       <div class="card">
-        <div style="font-size:24px;margin-bottom:8px;">🎬</div>
-        <div class="card-title">Producción audiovisual y video</div>
-        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">Con las cámaras disponibles y DaVinci Resolve (gratuito) o CapCut, los estudiantes pueden producir mini-documentales, explainers curriculares, entrevistas a la comunidad. Activa comunicación multimodal y pensamiento narrativo.</div>
-        <div class="row"><span class="row-lbl">Herramienta edición</span><span class="row-val" style="font-size:11px;">DaVinci Resolve / CapCut</span></div>
-        <div class="row"><span class="row-lbl">Equipos requeridos</span><span class="row-val" style="font-size:11px;">Cámara disponible + laptop</span></div>
-        <div class="row"><span class="row-lbl">Plataforma distribución</span><span class="row-val" style="font-size:11px;">YouTube (canal colegio)</span></div>
-        <div class="row"><span class="row-lbl">Curva de aprendizaje</span><span class="badge b-amber">Media</span></div>
-        <div class="row"><span class="row-lbl">Producto compartible</span><span class="badge b-green">Video publicado</span></div>
+        <div class="card-title">Zona de electrónica e interactividad</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:12px;">El puente entre lo físico y lo digital. Un LED que parpadea cuando alguien se acerca transforma la abstracción de la física en algo que los estudiantes pueden tocar, romper y reparar.</div>
+        <div class="row"><span class="row-lbl">Microcontroladores</span><span class="row-val" style="font-size:11px;">Arduino Uno, micro:bit</span></div>
+        <div class="row"><span class="row-lbl">Sensores básicos</span><span class="row-val" style="font-size:11px;">Temperatura, luz, movimiento, humedad</span></div>
+        <div class="row"><span class="row-lbl">Componentes</span><span class="row-val" style="font-size:11px;">LEDs, resistencias, protoboard, cables</span></div>
+        <div class="row"><span class="row-lbl">Simulación online</span><span class="row-val" style="font-size:11px;">Tinkercad Circuits (gratis)</span></div>
+        <div class="row"><span class="row-lbl">Costo kit inicial × 5 grupos</span><span class="row-val" style="font-size:11px;">~$200.000–350.000 CLP</span></div>
         <div class="hl hl-blue" style="margin-top:10px;">
-          <div class="hl-title">Proyecto piloto sugerido</div>
-          <div class="hl-text">Documental "Maule que construye": historia de Colín y sectores aledaños contada por los propios estudiantes. Conexión con identidad territorial.</div>
+          <div class="hl-title">Por qué es clave para Los Agustinos</div>
+          <div class="hl-text">La electrónica hace que la ciencia deje de ser abstracta. Un sensor de temperatura del patio conectado a una pantalla es física real — no un ejercicio del libro.</div>
         </div>
       </div>
       <div class="card">
-        <div style="font-size:24px;margin-bottom:8px;">🎨</div>
-        <div class="card-title">Diseño gráfico y comunicación visual</div>
-        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:10px;">Canva (educativo gratuito) y Figma (gratuito para educación) permiten diseñar campañas, infografías, identidades de marca para proyectos. Conecta directamente con el perfil de egreso en alfabetización digital y creatividad.</div>
-        <div class="row"><span class="row-lbl">Herramienta principal</span><span class="row-val" style="font-size:11px;">Canva for Education</span></div>
-        <div class="row"><span class="row-lbl">Avance</span><span class="row-val" style="font-size:11px;">Figma (UI/UX básico)</span></div>
-        <div class="row"><span class="row-lbl">Equipos requeridos</span><span class="row-val" style="font-size:11px;">Cualquier computador con web</span></div>
-        <div class="row"><span class="row-lbl">Curva de aprendizaje</span><span class="badge b-green">Baja</span></div>
-        <div class="row"><span class="row-lbl">Producto compartible</span><span class="badge b-green">Afiche, campaña, marca</span></div>
-        <div class="hl hl-purple" style="margin-top:10px;">
-          <div class="hl-title">Proyecto piloto sugerido</div>
-          <div class="hl-text">Campaña de comunicación escolar: los estudiantes diseñan la identidad visual de la primera Feria MakerSpace del colegio.</div>
+        <div class="card-title">Zona digital (lo que ya existe)</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:12px;">Con 42 equipos, audiovisual disponible y WiFi, esta zona ya existe. El desafío no es crearla sino reorientarla: de consumo de contenidos a producción de artefactos digitales.</div>
+        <div class="row"><span class="row-lbl">Computadores disponibles</span><span class="badge b-green">42 operativos</span></div>
+        <div class="row"><span class="row-lbl">Software maker</span><span class="row-val" style="font-size:11px;">Scratch, Tinkercad, FreeCAD, Audacity</span></div>
+        <div class="row"><span class="row-lbl">Producción audiovisual</span><span class="row-val" style="font-size:11px;">DaVinci Resolve + equipos disponibles</span></div>
+        <div class="row"><span class="row-lbl">Programación</span><span class="row-val" style="font-size:11px;">MakeCode, p5.js, Python básico</span></div>
+        <div class="row"><span class="row-lbl">Inversión adicional</span><span class="badge b-green">Mínima — software gratuito</span></div>
+        <div class="hl hl-green" style="margin-top:10px;">
+          <div class="hl-title">El cambio que requiere</div>
+          <div class="hl-text">Pasar de "clase de computación" a "estudio de producción". Mismo espacio, mismos equipos — distinto contrato pedagógico con los estudiantes.</div>
         </div>
       </div>
     </div>
 
     <div class="g-2-1 mb2">
       <div class="card">
-        <div class="card-title">Stack de herramientas digitales gratuitas — disponibles hoy</div>
-        <div style="position:relative;width:100%;height:300px;">
-          <canvas id="toolsChart"></canvas>
-        </div>
-        <div class="legend" style="margin-top:10px;">
-          <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Complejidad técnica</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#1A3F6F"></span>Impacto pedagógico</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Acceso con equipo disponible</span>
+        <div class="card-title">Layout del espacio maker — Sala de Computación rediseñada por zonas</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:14px;">Propuesta de reorganización sin obras mayores, usando el mobiliario existente más adquisiciones menores</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:8px;">
+          <div style="background:var(--accent-light);border:1px dashed var(--accent);border-radius:var(--radius-sm);padding:12px;grid-column:1/3;">
+            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">ZONA DE PROTOTIPADO FÍSICO · centro-frontal</div>
+            <div style="font-size:11px;color:var(--text-2);">Mesa de trabajo larga × 1 · Herramientas manuales · Materiales del ciclo · Zona con punto de agua cercano</div>
+          </div>
+          <div style="background:var(--blue-light);border:1px dashed var(--blue);border-radius:var(--radius-sm);padding:12px;">
+            <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px;">ZONA DIGITAL / CÓDIGO · lateral derecha</div>
+            <div style="font-size:11px;color:var(--text-2);">10 computadores en U · Scratch, Arduino IDE · Tinkercad Circuits online</div>
+          </div>
+          <div style="background:var(--purple-light);border:1px dashed var(--purple);border-radius:var(--radius-sm);padding:12px;">
+            <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:4px;">ZONA ELECTRÓNICA · lateral izquierda</div>
+            <div style="font-size:11px;color:var(--text-2);">5 estaciones Arduino · Kits de sensores · Protoboards compartibles</div>
+          </div>
+          <div style="background:var(--amber-light);border:1px dashed var(--amber);border-radius:var(--radius-sm);padding:12px;">
+            <div style="font-size:11px;font-weight:600;color:var(--amber);margin-bottom:4px;">ZONA DE PRODUCCIÓN AV · fondo</div>
+            <div style="font-size:11px;color:var(--text-2);">Cámara + micrófono disponibles · Fondo neutro · Edición en 2 laptops</div>
+          </div>
+          <div style="background:var(--surface2);border:1px dashed var(--border-strong);border-radius:var(--radius-sm);padding:12px;">
+            <div style="font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:4px;">ALMACÉN SEGURO · acceso controlado</div>
+            <div style="font-size:11px;color:var(--text-2);">Armarios reparados + con llave · Materiales consumibles · Inventario visible</div>
+          </div>
+          <div style="background:var(--red-light);border:1px dashed var(--red);border-radius:var(--radius-sm);padding:12px;">
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;">ZONA DE EXHIBICIÓN · entrada</div>
+            <div style="font-size:11px;color:var(--text-2);">Proyectos terminados visibles · Mural de proceso · "Galería maker"</div>
+          </div>
         </div>
       </div>
       <div>
         <div class="card mb">
-          <div class="card-title">Niveles de creación digital</div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="padding:10px 12px;background:var(--accent-light);border-radius:var(--radius-sm);">
-              <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:3px;">NIVEL 1 · Consumo consciente</div>
-              <div style="font-size:12px;color:var(--text-2);">Analizar, criticar y comentar medios digitales existentes. Identificar bias en noticias, fuentes, algoritmos.</div>
-            </div>
-            <div style="padding:10px 12px;background:var(--blue-light);border-radius:var(--radius-sm);">
-              <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:3px;">NIVEL 2 · Creación con herramientas</div>
-              <div style="font-size:12px;color:var(--text-2);">Canva, Podcast, Video, Infografías. El estudiante produce contenido con herramientas ya diseñadas. <strong>Punto de entrada recomendado.</strong></div>
-            </div>
-            <div style="padding:10px 12px;background:var(--amber-light);border-radius:var(--radius-sm);">
-              <div style="font-size:11px;font-weight:600;color:var(--amber);margin-bottom:3px;">NIVEL 3 · Diseño de experiencias</div>
-              <div style="font-size:12px;color:var(--text-2);">Figma, presentaciones interactivas, juegos educativos en Scratch. El estudiante diseña para otros.</div>
-            </div>
-            <div style="padding:10px 12px;background:var(--purple-light);border-radius:var(--radius-sm);">
-              <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:3px;">NIVEL 4 · Programación y automatización</div>
-              <div style="font-size:12px;color:var(--text-2);">Python básico, Arduino, Tinkercad. El estudiante hace que las cosas pasen solas. Fase 3 en adelante.</div>
-            </div>
-          </div>
+          <div class="card-title">Materiales de bajo costo — alto impacto</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:10px;line-height:1.6;">El presupuesto inicial no debería gastarse en equipos — sino en materiales que se consumen y habilitan el hacer. Estos materiales son los más versátiles por peso de inversión.</div>
+          <div class="row"><span class="row-lbl">Cartón corrugado grueso</span><span class="row-val" style="font-size:11px;">~$8.000/caja</span></div>
+          <div class="row"><span class="row-lbl">Madera balsa en planchas</span><span class="row-val" style="font-size:11px;">~$15.000/pack</span></div>
+          <div class="row"><span class="row-lbl">Filamento PLA 1kg (impresora 3D)</span><span class="row-val" style="font-size:11px;">~$18.000/kg</span></div>
+          <div class="row"><span class="row-lbl">Kit Arduino Uno starter</span><span class="row-val" style="font-size:11px;">~$25.000/kit</span></div>
+          <div class="row"><span class="row-lbl">micro:bit v2</span><span class="row-val" style="font-size:11px;">~$22.000/unidad</span></div>
+          <div class="row"><span class="row-lbl">Set sensores variados × 10</span><span class="row-val" style="font-size:11px;">~$30.000/set</span></div>
+          <div class="row"><span class="row-lbl">Materiales reciclados (gestión)</span><span class="row-val" style="font-size:11px;">Gratis — apoderados + barrio</span></div>
         </div>
         <div class="card">
-          <div class="card-title">Inteligencia Artificial como herramienta maker</div>
-          <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.65;">La IA no reemplaza la creación — la amplifica. Con los 42 equipos disponibles y conexión a internet, los estudiantes pueden usar IA como co-creadora desde el primer día.</div>
-          <div class="row"><span class="row-lbl">Texto e ideas</span><span class="row-val" style="font-size:11px;">ChatGPT, Claude como copiloto</span></div>
-          <div class="row"><span class="row-lbl">Imágenes para proyectos</span><span class="row-val" style="font-size:11px;">Canva AI, Adobe Express</span></div>
-          <div class="row"><span class="row-lbl">Música para podcasts/video</span><span class="row-val" style="font-size:11px;">Suno, ElevenLabs</span></div>
-          <div class="row"><span class="row-lbl">Presentaciones automáticas</span><span class="row-val" style="font-size:11px;">Gamma, Beautiful.ai</span></div>
-          <div class="hl hl-amber" style="margin-top:10px;">
-            <div class="hl-title">Enfoque pedagógico clave</div>
-            <div class="hl-text">La IA se usa como herramienta de prototipado rápido, no para reemplazar el proceso. El estudiante define el problema, evalúa el output de la IA y decide si sirve. Eso es pensamiento crítico en acción.</div>
+          <div class="card-title">El principio del material que se puede dañar</div>
+          <div class="hl hl-red" style="margin-bottom:8px;">
+            <div class="hl-title">El error del "laboratorio de computación"</div>
+            <div class="hl-text">Los equipos son caros y no se dañan. Eso crea un contrato implícito: "cuida el equipo, no experimentes". El maker trabaja con materiales que pueden sacrificarse en nombre del aprendizaje.</div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb2">
-      <div class="card-title">Movimiento Maker — principios y cultura</div>
-      <div style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;">El movimiento maker no es una metodología pedagógica: es una <strong>cultura de creación, comunidad y apertura</strong> que nació en los FabLabs del MIT (Neil Gershenfeld, 2005) y se extendió globalmente a través de Make: Magazine, Maker Faires y el movimiento DIY/DIWO (Do It With Others). Su premisa: cualquier persona puede aprender a hacer cualquier cosa con las herramientas correctas y una comunidad que comparte conocimiento.</div>
-      <div class="g3">
-        <div class="hl hl-green" style="margin:0;border-radius:var(--radius-sm);">
-          <div class="hl-title">Make · Hacer</div>
-          <div class="hl-text">El aprendizaje ocurre en el acto de construir. No importa si es con madera, código, tela o electrónica — lo que importa es que el objeto exista y funcione. "Making is connecting" (David Gauntlett).</div>
-        </div>
-        <div class="hl hl-blue" style="margin:0;border-radius:var(--radius-sm);">
-          <div class="hl-title">Share · Compartir</div>
-          <div class="hl-text">El maker comparte lo que aprende y lo que crea. Código abierto, instrucciones publicadas, demos públicas. La comunidad es el amplificador del aprendizaje individual.</div>
-        </div>
-        <div class="hl hl-purple" style="margin:0;border-radius:var(--radius-sm);">
-          <div class="hl-title">Hack · Modificar</div>
-          <div class="hl-text">Tomar algo existente y cambiarlo, mejorarlo, reutilizarlo para otro propósito. El "hackeo" es una forma legítima de aprender: entender algo desmontándolo y reconstruyéndolo.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb2">
-      <div class="card-title">Tipos de creación en el espacio maker digital</div>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Fabricación digital asistida por computador</div>
-          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">Diseño en software → producción física. El circuito digital y el objeto físico son el mismo proceso.</div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Modelado 3D</span><span style="font-size:11px;color:var(--text-3);">Tinkercad, FreeCAD, Blender</span></div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Corte vectorial</span><span style="font-size:11px;color:var(--text-3);">Inkscape + cortadora láser</span></div>
-          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Impresión 3D</span><span style="font-size:11px;color:var(--text-3);">Slicer + FDM básico</span></div>
-        </div>
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Electrónica y física interactiva</div>
-          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">Hacer que los objetos reaccionen al mundo real. La electrónica deja de ser abstracta cuando prende un LED o mide temperatura.</div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Microcontroladores</span><span style="font-size:11px;color:var(--text-3);">Arduino, ESP32, micro:bit</span></div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Sensores básicos</span><span style="font-size:11px;color:var(--text-3);">Temperatura, luz, distancia</span></div>
-          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Simulación</span><span style="font-size:11px;color:var(--text-3);">Tinkercad Circuits (online)</span></div>
-        </div>
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Programación creativa y código</div>
-          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">El código como material. No programar para resolver ejercicios — programar para que algo hermoso o útil exista en el mundo.</div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Bloques visuales</span><span style="font-size:11px;color:var(--text-3);">Scratch, MakeCode</span></div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Web básica</span><span style="font-size:11px;color:var(--text-3);">HTML/CSS, p5.js</span></div>
-          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Arte generativo</span><span style="font-size:11px;color:var(--text-3);">Processing, openFrameworks</span></div>
-        </div>
-        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Biohacking y maker de bajo costo</div>
-          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">La tradición DIY aplicada a ciencia accesible. Microscopios de cartón, tintes naturales, experimentos que cuestan menos de $5.000.</div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">OpenScienceHW</span><span style="font-size:11px;color:var(--text-3);">Equipos abiertos replicables</span></div>
-          <div class="row" style="padding:5px 0;"><span class="row-lbl" style="font-size:12px;">Foldscope</span><span style="font-size:11px;color:var(--text-3);">Microscopio de papel</span></div>
-          <div class="row" style="padding:5px 0;border:none;"><span class="row-lbl" style="font-size:12px;">Materiales reciclados</span><span style="font-size:11px;color:var(--text-3);">Cajas, cartón, botellas</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="g-2-1 mb2">
-      <div class="card">
-        <div class="card-title">Ecosistema maker global — referencias clave</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--accent);flex-shrink:0;">F</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);">FabLab Network (MIT)</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Red global de laboratorios de fabricación digital. Protocolo estándar: láser, impresión 3D, fresadora, vinilo, electrónica. Chile tiene FabLabs en Santiago, Valparaíso y otras ciudades.</div></div>
+          <div class="hl hl-green">
+            <div class="hl-title">El contrato maker</div>
+            <div class="hl-text">Presupuestar explícitamente materiales que van a ser destruidos, dañados o descartados. Llamarlo "presupuesto de aprendizaje", no "daño". El cartón roto es evidencia de que alguien trabajó.</div>
           </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--blue);flex-shrink:0;">M</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Make: Magazine y Maker Faire</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">La biblia del movimiento maker desde 2005. Maker Faire son ferias donde makers de todas las edades muestran sus proyectos. Modelo directo para la Feria MakerSpace Los Agustinos.</div></div>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--amber-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--amber);flex-shrink:0;">I</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Instructables / Hackster.io</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Repositorios abiertos con miles de proyectos maker documentados paso a paso. Los estudiantes pueden publicar sus propios proyectos y recibir feedback de la comunidad global.</div></div>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--purple-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--purple);flex-shrink:0;">A</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Arduino Education / micro:bit</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Plataformas diseñadas para educación con recursos curriculares abiertos. Arduino Education tiene programas específicos para escuelas con contexto de recursos limitados.</div></div>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--red-light);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--red);flex-shrink:0;">C</div>
-            <div><div style="font-size:13px;font-weight:600;color:var(--text);">Colabi / Exploradores del Futuro Maule</div><div style="font-size:12px;color:var(--text-2);line-height:1.55;">Referentes locales del ecosistema maker en la Región del Maule. Articular con estas iniciativas permite acceso a red de mentores, materiales compartidos y ferias regionales.</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Dimensiones del perfil maker estudiantil</div>
-        <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;line-height:1.6;">Lo que se busca desarrollar en el estudiante — no competencias técnicas aisladas, sino una <em>identidad</em> como creador.</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div>
-            <div><span style="font-size:13px;font-weight:500;">Curiosidad activa</span> <span style="font-size:12px;color:var(--text-3);">— se pregunta "¿cómo funciona esto?"</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;"></div>
-            <div><span style="font-size:13px;font-weight:500;">Tolerancia al error</span> <span style="font-size:12px;color:var(--text-3);">— el fallo es información, no fracaso</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:var(--amber);flex-shrink:0;"></div>
-            <div><span style="font-size:13px;font-weight:500;">Pensamiento en sistemas</span> <span style="font-size:12px;color:var(--text-3);">— ve relaciones, no partes aisladas</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:var(--purple);flex-shrink:0;"></div>
-            <div><span style="font-size:13px;font-weight:500;">Generosidad del conocimiento</span> <span style="font-size:12px;color:var(--text-3);">— comparte lo que aprende</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0;"></div>
-            <div><span style="font-size:13px;font-weight:500;">Identidad creadora</span> <span style="font-size:12px;color:var(--text-3);">— "soy alguien que hace cosas"</span></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:var(--text-3);flex-shrink:0;"></div>
-            <div><span style="font-size:13px;font-weight:500;">Agencia sobre el entorno</span> <span style="font-size:12px;color:var(--text-3);">— puedo cambiar cosas a mi alrededor</span></div>
-          </div>
-        </div>
-        <div class="hl hl-amber" style="margin-top:14px;">
-          <div class="hl-title">Por qué importa en Los Agustinos</div>
-          <div class="hl-text">En un contexto de alta vulnerabilidad, la identidad creadora es un factor protector documentado. El estudiante que produce algo real tiene evidencia concreta de su capacidad — independiente de su nota o su situación familiar.</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Marco de competencias digitales — MINEDUC + DigComp</div>
-      <div style="position:relative;width:100%;height:260px;">
-        <canvas id="digcompChart"></canvas>
+      <div class="card-title">Progresión de proyectos maker — de lo más simple a lo más complejo</div>
+      <div style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr><th>Nivel</th><th>Proyecto tipo</th><th>Materiales</th><th>Tiempo</th><th>Habilidad central</th><th>Producto</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="badge b-green">Entrada</span></td><td>Maqueta de un problema del barrio en cartón</td><td>Cartón, pegamento, tijera</td><td>2 sesiones</td><td>Pensamiento espacial, narrativa</td><td>Objeto tridimensional</td></tr>
+            <tr><td><span class="badge b-green">Entrada</span></td><td>Circuito de LED con pila y switch</td><td>Kit básico $5.000</td><td>1 sesión</td><td>Electricidad básica</td><td>Luz que enciende</td></tr>
+            <tr><td><span class="badge b-amber">Medio</span></td><td>Sensor de temperatura con Arduino + display</td><td>Arduino + componentes</td><td>3–4 sesiones</td><td>Código + física</td><td>Instrumento funcional</td></tr>
+            <tr><td><span class="badge b-amber">Medio</span></td><td>Juego en Scratch controlado por sensor físico</td><td>micro:bit + computador</td><td>4 sesiones</td><td>Programación + diseño</td><td>Juego jugable</td></tr>
+            <tr><td><span class="badge b-blue">Avanzado</span></td><td>Prototipo de solución a problema real del colegio</td><td>Mixto + impresión 3D</td><td>6–8 sesiones</td><td>Design Thinking + fabricación</td><td>Prototipo presentable</td></tr>
+            <tr><td><span class="badge b-purple">Feria</span></td><td>Proyecto de feria con defensa pública</td><td>Todo lo anterior</td><td>Semestre</td><td>Integración de todas</td><td>Exhibición pública</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: CAPITAL TERRITORIAL -->
+  <div id="tab-territorial" class="tab-panel">
+
+    <div style="background:linear-gradient(135deg,#2C4A2E,#1D4E3F);color:white;border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-15px;bottom:-25px;font-size:8rem;opacity:0.07;line-height:1;">🌾</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">Cruce diagnóstico × territorio</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;line-height:1.5;margin-bottom:10px;">El Maule tiene una economía de oficios y saberes manuales que la escuela invisibiliza. El MakerSpace puede ser el primer espacio donde eso se reconoce como conocimiento legítimo.</div>
+      <div style="font-size:12px;opacity:0.65;">El capital cultural territorial no es un contexto — es el punto de partida pedagógico</div>
+    </div>
+
+    <div class="card mb2">
+      <div class="card-title">Lo que el diagnóstico no preguntó — y debería haber preguntado</div>
+      <div style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:16px;">El formulario de diagnóstico captura bien la dimensión institucional, pero omite completamente la dimensión territorial. Estas preguntas no formuladas tienen respuestas que cambian radicalmente el diseño del MakerSpace.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="padding:12px;background:var(--red-light);border-radius:var(--radius-sm);border-left:3px solid var(--red);">
+          <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:5px;">Pregunta no formulada</div>
+          <div style="font-size:12px;color:var(--text-2);">¿Qué oficios y trabajos manuales hay en las familias de los estudiantes?</div>
+        </div>
+        <div style="padding:12px;background:var(--accent-light);border-radius:var(--radius-sm);border-left:3px solid var(--accent);">
+          <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:5px;">Respuesta probable</div>
+          <div style="font-size:12px;color:var(--text-2);">Agricultura, ganadería, carpintería, mecánica, costura, gasfitería, construcción — oficios de tradición regional</div>
+        </div>
+        <div style="padding:12px;background:var(--red-light);border-radius:var(--radius-sm);border-left:3px solid var(--red);">
+          <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:5px;">Pregunta no formulada</div>
+          <div style="font-size:12px;color:var(--text-2);">¿Los estudiantes ya hacen cosas con sus manos fuera del colegio?</div>
+        </div>
+        <div style="padding:12px;background:var(--accent-light);border-radius:var(--radius-sm);border-left:3px solid var(--accent);">
+          <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:5px;">Respuesta probable</div>
+          <div style="font-size:12px;color:var(--text-2);">Sí — ayudan en tareas del hogar, reparan cosas, cultivan, cuidan animales. P26 lo confirma indirectamente: "construyen fuera del colegio"</div>
+        </div>
+        <div style="padding:12px;background:var(--red-light);border-radius:var(--radius-sm);border-left:3px solid var(--red);">
+          <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:5px;">Pregunta no formulada</div>
+          <div style="font-size:12px;color:var(--text-2);">¿Qué problemas reales del barrio o la comunidad podrían ser el punto de partida de proyectos?</div>
+        </div>
+        <div style="padding:12px;background:var(--accent-light);border-radius:var(--radius-sm);border-left:3px solid var(--accent);">
+          <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:5px;">Respuesta probable</div>
+          <div style="font-size:12px;color:var(--text-2);">Gestión del agua, calidad del aire, transporte, comercio local, seguridad — todos problemas con dimensión técnica abordable con herramientas maker</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-2-1 mb2">
+      <div class="card">
+        <div class="card-title">Mapa de saberes territoriales — lo que las familias ya saben hacer</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:14px;">Cada oficio familiar es un punto de conexión entre el MakerSpace y la vida real de los estudiantes. La tabla muestra cómo el saber territorial se traduce en proyecto maker concreto.</div>
+        <div style="overflow-x:auto;">
+          <table class="compare-table" style="font-size:12px;">
+            <thead>
+              <tr><th>Saber familiar / territorial</th><th>Conexión maker</th><th>Proyecto posible</th><th>Asignatura que activa</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>🌾 Agricultura y riego</td><td>Sensores de humedad del suelo</td><td>Sistema de riego automatizado con Arduino para huerto escolar</td><td>Ciencias, Matemáticas, Tecnología</td></tr>
+              <tr><td>🔨 Carpintería y construcción</td><td>Diseño y corte de madera</td><td>Mobiliario del propio MakerSpace diseñado por estudiantes</td><td>Geometría, Tecnología, Arte</td></tr>
+              <tr><td>🪡 Costura y textil</td><td>E-textiles, circuitos cosibles</td><td>Wearable con LEDs integrados — ropa que comunica</td><td>Arte, Física, Tecnología</td></tr>
+              <tr><td>🔧 Mecánica y gasfitería</td><td>Sistemas físicos y fluidos</td><td>Maqueta funcional de sistema de agua potable con bomba real</td><td>Física, Ciencias, Matemáticas</td></tr>
+              <tr><td>🏠 Construcción y albañilería</td><td>Modelado y maquetas</td><td>Modelo 3D de mejoramiento de espacio público del barrio</td><td>Arte, Historia, Matemáticas</td></tr>
+              <tr><td>🌿 Recolección y naturaleza</td><td>Ciencia ciudadana</td><td>Estación meteorológica escolar con sensores de bajo costo</td><td>Ciencias, Matemáticas, Geografía</td></tr>
+              <tr><td>🍲 Cocina y gastronomía</td><td>Química aplicada</td><td>Medición de pH y temperatura en procesos de fermentación</td><td>Química, Biología, Matemáticas</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="card mb">
+          <div class="card-title">El principio de la "fondamentación territorial"</div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:10px;">Fondamentación (del italiano <em>fondamento</em>: cimiento) es el concepto que describe cómo el aprendizaje se arraiga cuando parte de lo que ya es significativo para el aprendiz. En el Maule, eso significa partir del río, del campo, de los oficios.</div>
+          <div class="hl hl-amber">
+            <div class="hl-title">La diferencia práctica</div>
+            <div class="hl-text">Un sensor de temperatura que mide el patio de Los Agustinos es más poderoso pedagógicamente que el mismo sensor midiendo "la temperatura del aula" — porque el patio tiene historia, tiene personas, tiene problemas concretos que los estudiantes conocen.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Activos territoriales del Maule aprovechables</div>
+          <div class="row"><span class="row-lbl">Red hídrica DGA</span><span class="row-val" style="font-size:11px;">Datos abiertos — proyectos de monitoreo</span></div>
+          <div class="row"><span class="row-lbl">Patrimonio vitivinícola</span><span class="row-val" style="font-size:11px;">Química, sensórica, emprendimiento</span></div>
+          <div class="row"><span class="row-lbl">Sismicidad regional</span><span class="row-val" style="font-size:11px;">Sensores, geodata, preparación</span></div>
+          <div class="row"><span class="row-lbl">Comercio local barrio</span><span class="row-val" style="font-size:11px;">Diseño, comunicación, emprendimiento</span></div>
+          <div class="row"><span class="row-lbl">GORE Maule · datos abiertos</span><span class="row-val" style="font-size:11px;">Visualización, análisis territorial</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2 mb2">
+      <div class="card">
+        <div class="card-title">Capital cultural invisibilizado — el problema con el modelo escolar</div>
+        <div style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:14px;">Pierre Bourdieu describió cómo la escuela reconoce ciertos saberes como "capital cultural legítimo" e ignora otros. En Los Agustinos, el hijo de un carpintero llega con un conocimiento profundo de materiales, medidas y herramientas — y la escuela lo trata como si llegara vacío.</div>
+        <div style="overflow-x:auto;">
+          <table class="compare-table" style="font-size:12px;">
+            <thead>
+              <tr><th>Capital cultural familiar</th><th>Cómo lo ve la escuela hoy</th><th class="col-winner">Cómo lo ve el MakerSpace</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Hijo de agricultor sabe regar, medir terreno, leer el clima</td><td>No relevante para el currículum</td><td class="col-winner">Experto en sistemas físicos. Lidera el proyecto de sensor de suelo</td></tr>
+              <tr><td>Hija de costurera sabe medir, cortar, unir materiales con precisión</td><td>Habilidad doméstica, no académica</td><td class="col-winner">Domina geometría aplicada y materiales — referente en e-textiles</td></tr>
+              <tr><td>Hijo de mecánico entiende sistemas, desarmado y reparación</td><td>Conocimiento técnico-vocacional</td><td class="col-winner">Pensamiento sistémico avanzado — ideal para prototipado electrónico</td></tr>
+              <tr><td>Estudiante de zona rural conoce ciclos naturales y ecosistemas locales</td><td>Saberes informales, no científicos</td><td class="col-winner">Conocimiento de campo para diseñar proyectos de ciencia ciudadana</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="hl hl-purple" style="margin-top:12px;">
+          <div class="hl-title">La implicación para el diseño del MakerSpace</div>
+          <div class="hl-text">El primer proyecto maker de Los Agustinos debería partir de una encuesta a los estudiantes: "¿Qué sabes hacer con tus manos que el colegio nunca te ha preguntado?" Las respuestas diseñan el primer semestre.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Estrategia de vinculación territorial activa</div>
+        <div style="font-size:13px;color:var(--text-2);margin-bottom:14px;line-height:1.65;">El MakerSpace no debería ser un espacio cerrado solo para estudiantes y docentes (P39 del diagnóstico apunta a eso como limitante). La vinculación territorial lo multiplica.</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);">
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">👨‍🔧 Apoderados como mentores makers</div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.5;">Carpintero del barrio enseña a los estudiantes a trabajar madera. Mecánico explica sistemas. Agricultora habla de sensores naturales. Invierten el rol: el apoderado es el experto.</div>
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);">
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">🏘 Proyectos para el barrio, no para la nota</div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.5;">El producto final de cada ciclo maker resuelve algo real del entorno cercano. La junta de vecinos, la feria local, la plaza del barrio — audiencias reales con necesidades reales.</div>
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);">
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">🤝 Alianza con GORE Maule y municipio</div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.5;">Los proyectos maker pueden responder a desafíos reales del territorio publicados por el gobierno regional. Fuente de motivación, visibilidad y financiamiento simultáneamente.</div>
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);">
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;">📍 Feria maker abierta a la comunidad</div>
+            <div style="font-size:11px;color:var(--text-3);line-height:1.5;">Una vez al año, el colegio abre sus puertas y los estudiantes muestran sus proyectos a las familias, barrio y autoridades. El MakerSpace deja de ser invisible.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: MATRIZ DE ACTORES -->
+  <div id="tab-actores" class="tab-panel">
+
+    <div style="background:linear-gradient(135deg,#2D1F4E,#4A2D7A);color:white;border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-15px;bottom:-25px;font-size:8rem;opacity:0.07;line-height:1;">👥</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">Análisis político-institucional</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;line-height:1.5;margin-bottom:10px;">El MakerSpace más bien diseñado fracasa si no entiende quién pierde, quién gana y quién tiene miedo. La viabilidad política importa tanto como la pedagógica.</div>
+      <div style="font-size:12px;opacity:0.65;">Cruce diagnóstico × actores institucionales × teoría del cambio organizacional</div>
+    </div>
+
+    <div class="card mb2">
+      <div class="card-title">Radar de actores — posición inicial estimada frente al MakerSpace</div>
+      <div style="position:relative;width:100%;height:320px;">
+        <canvas id="actoresChart"></canvas>
       </div>
       <div class="legend" style="margin-top:10px;">
-        <span class="legend-item"><span class="legend-sq" style="background:#9B2335"></span>Nivel actual estimado en el colegio</span>
-        <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Meta con MakerSpace activo (2 años)</span>
+        <span class="legend-item"><span class="legend-sq" style="background:#1D4E3F"></span>Disposición al cambio (0–100)</span>
+        <span class="legend-item"><span class="legend-sq" style="background:#9B2335"></span>Nivel de influencia sobre el proyecto (0–100)</span>
+        <span class="legend-item"><span class="legend-sq" style="background:#B87333"></span>Riesgo de resistencia activa (0–100)</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;">
+
+      <div class="card" style="border-left:4px solid var(--accent);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">👔 Equipo Directivo</div>
+            <div style="font-size:11px;color:var(--text-3);">Director/a · UTP · Subdirectores</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="badge b-green">Apoyo explícito declarado (P38)</span>
+            <span class="badge b-green">Alta influencia</span>
+          </div>
+        </div>
+        <div class="g3">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;">⚠ Miedos específicos</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Resultados SIMCE/PDC durante la transición. Cuestionamientos de inspección o MINEDUC. Conflicto con apoderados si hay percepción de "desorden". Gasto SEP sin evidencia de impacto.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">✓ Ganancias reales</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Diferenciación institucional frente a otros colegios del sector. Visibilidad ante DAEM y GORE. Argumento para postular a fondos externos. Indicador de mejora de clima escolar.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px;">→ Estrategia recomendada</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Mantenerlos informados con hitos visibles y breves. Un informe de 1 página cada 4 semanas vale más que una presentación de 30 slides. Invitarlos a la primera feria — que vean resultados, no procesos.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--red);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">👩‍🏫 Docentes con perfil tradicional</div>
+            <div style="font-size:11px;color:var(--text-3);">Mayoría del cuerpo docente — P31 y P35</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="badge b-red">Resistencia probable</span>
+            <span class="badge b-amber">Influencia media-alta</span>
+          </div>
+        </div>
+        <div class="g3">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;">⚠ Miedos específicos</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Perder control de la clase. Quedar en evidencia frente a estudiantes que saben más de tecnología que ellos. Más trabajo sin más pago. Que el MakerSpace "les quite horas" a sus asignaturas.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">✓ Ganancias reales</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Sus asignaturas pueden conectarse con algo que los estudiantes quieren hacer. Menos conflictos de disciplina cuando los estudiantes están motivados. Posibilidad de coautorear proyectos visibles.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px;">→ Estrategia recomendada</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">No obligar. Invitar a observar primero. Cuando un docente de Historia ve que su asignatura cobra vida en un documental estudiantil, la motivación es intrínseca. El primer colega convertido es el mejor embajador.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--blue);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">🔬 Docente(s) innovadores — el líder oculto</div>
+            <div style="font-size:11px;color:var(--text-3);">P7 revela que alguien lleva estudiantes a ferias de ciencias regularmente</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="badge b-green">Aliado estratégico</span>
+            <span class="badge b-blue">Influencia subestimada</span>
+          </div>
+        </div>
+        <div class="g3">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;">⚠ Riesgo específico</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Burnout si se le carga toda la responsabilidad del MakerSpace. Frustración si el sistema no le da tiempo ni recursos formales. Puede convertirse en obstáculo si siente que "le están robando su iniciativa".</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">✓ Rol correcto</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Primer piloto. Curador del primer proyecto. Formador informal de pares. Pero con límites claros — no puede ser el único responsable. El MakerSpace no puede depender de una sola persona (P32).</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px;">→ Estrategia recomendada</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Identificarlo en las primeras 2 semanas. Darle reconocimiento explícito. Asignarle horas formales (no voluntarias) para el piloto. Conectarlo con la red Colabi/UDD Maule como par externo.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--amber);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">🧰 Paradocente / Auxiliar capacitado</div>
+            <div style="font-size:11px;color:var(--text-3);">Figura clave señalada en P19 — gestor del espacio</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="badge b-amber">Figura bisagra</span>
+            <span class="badge b-green">Disponibilidad alta</span>
+          </div>
+        </div>
+        <div class="g3">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;">⚠ Miedos específicos</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">No saber qué hacer cuando algo falla técnicamente. Sentir que el rol es "cuidador de equipos" y no algo con sentido. Conflicto con docentes que no respetan su autoridad en el espacio.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">✓ Ganancias reales</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Rol único y visible dentro del colegio. Desarrollo profesional concreto. Relación diferente con los estudiantes — más horizontal, menos disciplinaria. Posibilidad de formación en Colabi/SENCE.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px;">→ Estrategia recomendada</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Formación inicial de 2 días enfocada en cultura maker, no en habilidades técnicas específicas. Manual de preguntas frecuentes para los primeros 30 días. Conectarlo con comunidades maker online.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--purple);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">🎒 Estudiantes — los dos perfiles críticos</div>
+            <div style="font-size:11px;color:var(--text-3);">P34 — respuesta heterogénea según curso / nivel</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="badge b-purple">Actores principales</span>
+            <span class="badge b-amber">Alta variabilidad</span>
+          </div>
+        </div>
+        <div class="g2">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:6px;">Perfil A — el estudiante ya maker</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">Construye fuera del colegio (P26). Responde bien a autonomía. Probablemente tiene bajo rendimiento académico pero alto compromiso con proyectos concretos.</div>
+            <div class="hl hl-purple" style="margin:0;">
+              <div class="hl-title">Rol en el MakerSpace</div>
+              <div class="hl-text">Primer referente estudiantil. Su engagement inicial legitima el espacio ante el resto. Darle un rol visible desde la semana 1.</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:6px;">Perfil B — el estudiante escolástico</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:8px;">Alto rendimiento en evaluaciones tradicionales. Le incomoda el error, la ambigüedad y la falta de instrucción clara. Puede resistir el MakerSpace inicialmente.</div>
+            <div class="hl hl-amber" style="margin:0;">
+              <div class="hl-title">Estrategia específica</div>
+              <div class="hl-text">Darle rol de "documentador" o "curador" al inicio — tareas con estructura definida dentro del espacio maker. La entrada gradual es más efectiva que la inmersión forzada.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:4px solid var(--text-3);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">👨‍👩‍👧 Apoderados</div>
+            <div style="font-size:11px;color:var(--text-3);">No mencionados en el diagnóstico — actor invisible con poder real</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="badge b-amber">Sin datos — riesgo latente</span>
+          </div>
+        </div>
+        <div class="g3">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;">⚠ Miedos probables</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6);">¿Están perdiendo clases por "jugar"? ¿Les van a cobrar algo? ¿Por qué no estudian para la PSU? El desconocimiento genera rumores más dañinos que cualquier resistencia docente.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;">✓ Ganancias reales</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Sus hijos traen algo concreto a casa — un objeto, un video, un proyecto. Eso cambia la conversación familiar. Algunos apoderados tienen oficios que el MakerSpace puede valorar.</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px;">→ Estrategia recomendada</div>
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Reunión de apoderados en semana 4 del piloto — no para explicar el MakerSpace, sino para mostrar lo que los estudiantes ya hicieron. Un objeto en la mesa vale más que una presentación.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB: SEP VS LÓGICA MAKER -->
+  <div id="tab-sep" class="tab-panel">
+
+    <div style="background:linear-gradient(135deg,#6B2020,#9B2335);color:white;border-radius:var(--radius);padding:1.5rem 1.75rem;margin-bottom:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-15px;bottom:-25px;font-size:8rem;opacity:0.07;line-height:1;">📋</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.6;margin-bottom:8px;">Riesgo burocrático real</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;line-height:1.5;margin-bottom:10px;">La SEP financia lo que puede rendir cuentas. La lógica maker gasta en materiales que se destruyen, tiempo que no produce nota y aprendizajes que no se miden en prueba. Ese choque no es menor.</div>
+      <div style="font-size:12px;opacity:0.65;">Cruce P27 · P28 · P30 del diagnóstico con normativa SEP vigente</div>
+    </div>
+
+    <div class="g2 mb2">
+      <div class="card">
+        <div class="card-title">¿Qué permite y qué restringe la SEP para un MakerSpace?</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:12px;">La Ley 20.248 y sus circulares establecen usos permitidos de los fondos SEP. No toda inversión maker califica directamente.</div>
+        <div style="overflow-x:auto;">
+          <table class="compare-table" style="font-size:12px;">
+            <thead>
+              <tr><th>Gasto maker típico</th><th>¿Califica SEP?</th><th>Fundamento / Riesgo</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Equipos computacionales, notebooks</td>
+                <td><span class="badge b-green">✓ Sí</span></td>
+                <td>Califica como "recursos tecnológicos" — base bien establecida</td>
+              </tr>
+              <tr>
+                <td>Capacitación docente en metodologías</td>
+                <td><span class="badge b-green">✓ Sí</span></td>
+                <td>Califica como "desarrollo profesional docente" — sin problema</td>
+              </tr>
+              <tr>
+                <td>Mobiliario específico de MakerSpace</td>
+                <td><span class="badge b-amber">⚠ Parcial</span></td>
+                <td>Califica si se justifica como "habilitación de espacio educativo" con plan pedagógico adjunto</td>
+              </tr>
+              <tr>
+                <td>Kits Arduino, micro:bit, sensores</td>
+                <td><span class="badge b-amber">⚠ Con respaldo</span></td>
+                <td>Requiere justificación pedagógica en plan de uso. No puede ser compra aislada sin contexto curricular</td>
+              </tr>
+              <tr>
+                <td>Materiales consumibles (cartón, PLA, cables)</td>
+                <td><span class="badge b-red">✗ Riesgoso</span></td>
+                <td>Zona gris — "insumos educativos" puede justificarlo, pero es observado en auditorías. Monto acumulado puede generar alerta</td>
+              </tr>
+              <tr>
+                <td>Impresora 3D, cortadora láser</td>
+                <td><span class="badge b-amber">⚠ Con justificación</span></td>
+                <td>Califica como equipamiento si hay plan de uso pedagógico documentado. Evitar compra sin memoria explicativa</td>
+              </tr>
+              <tr>
+                <td>Horas de asesoría externa (Colabi, UDD)</td>
+                <td><span class="badge b-green">✓ Sí</span></td>
+                <td>Califica como "asesoría técnica pedagógica" — una de las categorías mejor establecidas de SEP</td>
+              </tr>
+              <tr>
+                <td>"Presupuesto de daños" — materiales rotos intencionalmente</td>
+                <td><span class="badge b-red">✗ No califica</span></td>
+                <td>No existe esta categoría en SEP. Los materiales dañados son pérdida contable, no aprendizaje documentable</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="card mb">
+          <div class="card-title">El problema del "gasto sin evidencia de aprendizaje"</div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:10px;">La SEP exige que todo gasto esté vinculado a una mejora medible en el desempeño de los estudiantes prioritarios. El MakerSpace produce aprendizajes profundos — pero no siempre medibles con los instrumentos que SEP acepta como evidencia.</div>
+          <div class="hl hl-red" style="margin-bottom:8px;">
+            <div class="hl-title">El riesgo real en auditoría</div>
+            <div class="hl-text">Un inspector de SEP pregunta: "¿En qué mejoró el SIMCE de los estudiantes prioritarios gracias a este gasto?" Si la respuesta es solo narrativa, sin datos, el gasto puede ser objetado.</div>
+          </div>
+          <div class="hl hl-amber">
+            <div class="hl-title">La defensa correcta</div>
+            <div class="hl-text">Vincular cada proyecto maker con OA del currículum. Documentar aprendizajes con portfolio. Registrar asistencia y participación de estudiantes prioritarios. La evidencia existe — hay que diseñarla desde el inicio.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Fuentes de financiamiento complementarias a SEP</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:8px;line-height:1.6;">La dependencia exclusiva de SEP (P30) es el mayor riesgo de sostenibilidad. Diversificar desde el año 1.</div>
+          <div class="row"><span class="row-lbl">CORFO · Educación</span><span class="row-val" style="font-size:11px;">Programas de innovación escolar — postulación anual</span></div>
+          <div class="row"><span class="row-lbl">MINEDUC · PME</span><span class="row-val" style="font-size:11px;">Plan de Mejoramiento Educativo — ítem tecnología</span></div>
+          <div class="row"><span class="row-lbl">GORE Maule · FNDR</span><span class="row-val" style="font-size:11px;">Proyectos educativos con impacto territorial</span></div>
+          <div class="row"><span class="row-lbl">Fundaciones privadas</span><span class="row-val" style="font-size:11px;">Telefónica Movistar, BHP, Arauco Educa</span></div>
+          <div class="row"><span class="row-lbl">Materiales reciclados</span><span class="row-val" style="font-size:11px;">Red de empresas locales — sin costo directo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb2">
+      <div class="card-title">Estrategia de documentación SEP-compatible para el MakerSpace</div>
+      <div style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;">La clave no es evitar gastar en maker — es documentar de una forma que el lenguaje SEP reconozca. Cada proyecto maker tiene una traducción curricular válida.</div>
+      <div class="g3">
+        <div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);">
+          <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:6px;">① Plan pedagógico anual</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Antes de cualquier compra, existe un documento que vincula cada adquisición con OA del currículum y con la población de estudiantes prioritarios que lo usará. Este documento es el escudo ante auditorías.</div>
+        </div>
+        <div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);">
+          <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:6px;">② Registro de uso por proyecto</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Cada sesión maker registra: qué estudiantes participaron (% prioritarios), qué OA se trabajó, qué producto se generó. Formulario de 5 líneas, no un informe. Consistencia importa más que detalle.</div>
+        </div>
+        <div style="padding:14px;background:var(--surface2);border-radius:var(--radius-sm);">
+          <div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:6px;">③ Portfolio de evidencias trimestral</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;">Carpeta (física o digital) con fotos de proyectos, lista de participantes, producto final y reflexión del estudiante. Esto es la evidencia de aprendizaje que SEP puede observar sin necesidad de prueba estandarizada.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">El choque de lógicas — y cómo navegarlo sin perder la esencia maker</div>
+      <div style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr><th>Dimensión</th><th>Lógica SEP</th><th>Lógica maker</th><th class="col-winner">Punto de encuentro navegable</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Evidencia de aprendizaje</td><td>Prueba, nota, rendimiento medible</td><td>Objeto construido, proceso iterado</td><td class="col-winner">Portfolio + rúbrica maker con OA explícitos</td></tr>
+            <tr><td>Uso de materiales</td><td>Inventario con salida justificada</td><td>Materiales que se gastan y rompen</td><td class="col-winner">Categorizar como "insumos educativos" con plan de uso documentado</td></tr>
+            <tr><td>Tiempo curricular</td><td>Horas asignadas por asignatura</td><td>Tiempo flexible, transversal</td><td class="col-winner">Conectar formalmente a horas de Tecnología + Orientación + Taller</td></tr>
+            <tr><td>Impacto en estudiantes prioritarios</td><td>Mejora en indicadores estandarizados</td><td>Autoestima, agencia, identidad creativa</td><td class="col-winner">Encuesta de autoeficacia pre/post + registro de asistencia de prioritarios</td></tr>
+            <tr><td>Rendición de cuentas</td><td>Factura + informe de uso</td><td>Proceso de aprendizaje no lineal</td><td class="col-winner">Informe semestral con fotos, lista de proyectos, OA trabajados</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -1106,10 +1651,11 @@ function initChart(id) {
     new Chart(document.getElementById('peiAlignChart'), {
       type: 'bar',
       data: {
-        labels: ['Aprendizaje\nsignificativo','Metodologías\nactivas','Evaluación\nauténtica','Interdisciplina','Autonomía\nestudiantil','Colaboración\nentre pares','Vínculo con\ncomunidad','Creatividad\ne innovación'],
+        labels: ['Aprendizaje\nsignificativo','Metodologías\nactivas','Evaluación\nde proceso','Interdisciplina','Autonomía\nestudiantil','Colaboración\nentre pares','Vínculo con\ncomunidad','Creatividad\ne innovación'],
         datasets: [
-          { label: 'Presencia actual en PEI', data: [75,60,70,30,35,50,40,35], backgroundColor: '#1D4E3F', borderRadius: 3, borderWidth: 0 },
-          { label: 'Potencial con MakerSpace', data: [95,95,90,85,90,90,80,95], backgroundColor: '#4A2D7A', borderRadius: 3, borderWidth: 0 }
+          { label: 'Práctica real actual', data: [40,30,45,15,25,40,20,20], backgroundColor: '#9B2335', borderRadius: 3, borderWidth: 0 },
+          { label: 'Declarado en PEI', data: [80,75,80,40,50,60,50,50], backgroundColor: '#B87333', borderRadius: 3, borderWidth: 0 },
+          { label: 'Potencial con MakerSpace', data: [95,95,92,85,90,92,82,95], backgroundColor: '#1D4E3F', borderRadius: 3, borderWidth: 0 }
         ]
       },
       options: {
@@ -1157,6 +1703,28 @@ function initChart(id) {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: { r: { min: 0, max: 100, ticks: { stepSize: 25, color: TC, font: { size: 10 }, backdropColor: 'transparent' }, grid: { color: GC }, angleLines: { color: GC }, pointLabels: { color: TC, font: { size: 11 } } } }
+      }
+    });
+  }
+
+  if (id === 'actores') {
+    new Chart(document.getElementById('actoresChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Directivo','Docentes\ntradicionales','Docente\ninnovador','Paradocente','Estudiantes\nmakers','Estudiantes\nescolásticos','Apoderados'],
+        datasets: [
+          { label: 'Disposición al cambio', data: [80,25,90,70,95,40,55], backgroundColor: '#1D4E3F', borderRadius: 3, borderWidth: 0 },
+          { label: 'Influencia sobre el proyecto', data: [90,75,60,40,50,30,55], backgroundColor: '#9B2335', borderRadius: 3, borderWidth: 0 },
+          { label: 'Riesgo de resistencia activa', data: [15,70,10,20,5,45,40], backgroundColor: '#B87333', borderRadius: 3, borderWidth: 0 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: TC, font: { size: 10 } }, grid: { display: false } },
+          y: { max: 100, ticks: { color: TC, font: { size: 11 }, callback: v => v + '%' }, grid: { color: GC } }
+        }
       }
     });
   }
